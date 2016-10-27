@@ -5,7 +5,7 @@
   "main": "server.js",
   "scripts": {
     "start": "node src/server.js",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "istanbul cover _mocha -- -R spec"
   },
   "repository": {
     "type": "git",
@@ -22,6 +22,12 @@
     "socket.io": "^1.5.1"
   },
   "devDependencies": {
-    "morgan": "^1.7.0"
+    "chai": "^3.5.0",
+    "istanbul": "^0.4.5",
+    "jshint": "^2.9.4",
+    "mocha": "^3.1.2",
+    "morgan": "^1.7.0",
+    "request": "^2.76.0",
+    "socket.io-client": "^1.5.1"
   }
 }
