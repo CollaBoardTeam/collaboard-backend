@@ -7,7 +7,7 @@ We're developing a collaborative whiteboard web application.
 
 ## Installation
 
-#### Clone the project
+#### 1. Clone the project
 
 With SSH
 ```
@@ -19,32 +19,34 @@ With HTTPS
 $ git clone https://github.com/CollaBoardTeam/collaboard-backend.git
 ```
 
-#### Enter the project folder
+#### 2. Enter the project folder
 ```
 $ cd collaboard-backend
 ```
 
-#### Install packages
+#### 3. Install packages
 ```
 $ npm install
 ```
 
-#### Run application
+#### 4. Run application
 ```
 $ npm start
 ```
 
-#### Run lint
+## Development features
+
+#### 1. Run lint
 ```
 $ npm run lint
 ```
 
-#### Run unit tests with code coverage
+#### 2. Run unit tests with code coverage
 ```
 $ npm test
 ```
 
-#### Run build (includes lint & test & start)
+#### 3. Run build (includes lint & test & start)
 ```
 $ npm run build
 ```
