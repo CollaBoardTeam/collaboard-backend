@@ -5,8 +5,9 @@ var app = require('express')();
 var http = require('http');
 var logger = require('morgan');
 
-
-// Server configuration
+/**
+ * Server configuration
+ */
 var port = 3000;
 var server = exports.server = http.createServer(app).listen(port, function () {
     console.log('Magic happening at port', port);
@@ -33,26 +34,41 @@ io.on('connection', function (client) {
     client.on('disconnect', function () {
         console.log(client.id + ' disconnected...');
     });
+
+    // Message to all clients
+    client.on('chat message', function (msg) {
+        io.emit('chat message', msg);
+    });
     
     // Create a room
     client.on('create room', function (roomName) {
-        var user = socket.id;
+        var user = client.id;
         // If room name is empty throw error to caller
         if (!roomName) {
             io.to(user).emit('error', 'null pointer');
             return;
         }
         // If room name already exists
-        if(roomExists(room)) {
+        if(roomExists(roomName)) {
             io.to(user).emit('error', 'room already exists');
             return;
         } else {
-            socket.join(roomName);
+            client.join(roomName);
         }
+    });
+
+    // Send specific message to a room
+    client.on('send specific', function (msg, room) {
+        client.broadcast.to(room).emit('chat message', msg);
+    });
+
+    // Echoes message to everyone
+    client.on('echo', function (msg) {
+        client.emit('echo', msg);
     });
 });
 
-function roomExists(room) {
+function roomExists(roomName) {
     for (var room in io.sockets.adapter.rooms) {
         if (room === roomName)
             return true;
