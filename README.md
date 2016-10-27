@@ -36,17 +36,4 @@ $ npm start
 
 ## Development features
 
-#### 1. Run lint
-```
-$ npm run lint
-```
-
-#### 2. Run unit tests with code coverage
-```
-$ npm test
-```
-
-#### 3. Run build (includes lint & test & start)
-```
-$ npm run build
-```
+Please check [wiki](https://github.com/CollaBoardTeam/collaboard-backend/wiki/Developing)
