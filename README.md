@@ -5,3 +5,46 @@
 Project made under Software Engineering Lab.
 We're developing a collaborative whiteboard web application.
 
+## Installation
+
+#### Clone the project
+
+With SSH
+```
+$ git clone git@github.com:CollaBoardTeam/collaboard-backend.git
+```
+
+With HTTPS
+```
+$ git clone https://github.com/CollaBoardTeam/collaboard-backend.git
+```
+
+#### Enter the project folder
+```
+$ cd collaboard-backend
+```
+
+#### Install packages
+```
+$ npm install
+```
+
+#### Run application
+```
+$ npm start
+```
+
+#### Run lint
+```
+$ npm run lint
+```
+
+#### Run unit tests with code coverage
+```
+$ npm test
+```
+
+#### Run build (includes lint & test & start)
+```
+$ npm run build
+```
