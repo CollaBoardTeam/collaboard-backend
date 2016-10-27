@@ -1,0 +1,5 @@
+1 - run npm start
+2 - if everything goes well a message should appear on console saying server is running
+3 - enter browser and type: http://localhost:3000/socket
+4 - Voila, a chat example should be working.
+5 - You should see in console a message containing the client socket id.
