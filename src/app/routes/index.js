@@ -10,4 +10,8 @@ router.get('/', function (req, res, next) {
     res.sendFile(path.resolve('src/app/html/rooms.html'));
 });
 
+router.get('/socket', function (req, res, next) {
+    res.sendFile(path.resolve('src/app/html/index.html'));
+});
+
 module.exports = router;
