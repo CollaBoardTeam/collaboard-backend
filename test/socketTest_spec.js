@@ -16,11 +16,11 @@ describe('Sockets testing suite', function () {
         'force new connection': true
     };
 
-    beforeEach(function(done){
-        server = require(path.resolve('src/server')).server;
+    beforeEach(function (done){
+        server = require(path.resolve('src/server'));
         done();
-    })
-
+    });
+    
     it('echoes', function(done){
         var client = io.connect(socketUrl, options);
         client.once('connect', function(){

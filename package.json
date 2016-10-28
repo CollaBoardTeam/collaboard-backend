@@ -2,20 +2,21 @@
   "name": "collaboard",
   "version": "0.0.1",
   "description": "Realtime collaborative whiteboard",
-  "main": "server.js",
+  "main": "src/server.js",
+  "author": "FEUP-LES-TeamA",
+  "license": "ISC",
   "scripts": {
     "start": "node src/server.js",
     "test": "mocha test/*.js",
     "test-coverage": "istanbul cover node_modules/mocha/bin/_mocha test/*.js",
     "lint": "jshint **/*.js",
-    "build": "npm run lint && npm run test && npm start"
+    "build": "npm run lint && npm run test && npm start",
+    "deploy": "echo Error: Not defined"
   },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/CollaBoardTeam/collaboard-backend.git"
   },
-  "author": "FEUP-LES-TeamA",
-  "license": "ISC",
   "bugs": {
     "url": "https://github.com/CollaBoardTeam/collaboard-backend/issues"
   },
