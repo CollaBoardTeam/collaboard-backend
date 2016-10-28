@@ -70,8 +70,9 @@ io.on('connection', function (client) {
 
 function roomExists(roomName) {
     for (var room in io.sockets.adapter.rooms) {
-        if (room === roomName)
+        if (room === roomName) {
             return true;
+        }
     }
     return false;
 }
