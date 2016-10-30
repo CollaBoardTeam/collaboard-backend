@@ -24,7 +24,7 @@ var index = require('./app/routes/index');
 app.use('/', index);
 
 // Sockets declaration
-var io = require(path.resolve('src/socket.js'));
+require(path.resolve('src/socket.js'));
 
 // Need to export close server due to testing
 module.exports = {
