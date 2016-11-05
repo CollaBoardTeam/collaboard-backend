@@ -30,11 +30,21 @@
       <button id="btn">Room</button>
       <input id="just" />
     </section>
+    <section>
+      <input id="joinRoomName" />
+      <button id="btnJoin">Join</button>
+      <input id="joinLabel" />
+    </section>
     <script src="/socket.io/socket.io.js"></script>
     <script src="http://code.jquery.com/jquery-1.11.1.js"></script>
     <script>
       var socket = io.connect();
       //socket.emit('create', 'room1');
+
+      $('#btnJoin').click(function(){
+        socket.emit('join room', $('#joinRoomName').val());
+        return false;
+      });
 
       $('#btn').click(function(){
         socket.emit('create room', $('#roomName').val());

@@ -1,7 +1,11 @@
 
+/**
+ * Module dependencies
+ */
 var path = require('path');
 var server = require(path.resolve('src/server')).server;
 var io = require('socket.io').listen(server);
+var uuid = require('uuid');
 
 io.on('connection', function (client) {
     // Outputs to console a client has connected
@@ -12,31 +16,39 @@ io.on('connection', function (client) {
         console.log(client.id + ' disconnected...');
     });
 
-    // Message to all clients
-    client.on('chat message', function (msg) {
-        io.emit('chat message', msg);
+    /**
+     * Join whiteboard
+     * @param - roomName -> Should be GUID from whiteboard, coming from frontend
+     */
+    client.on('join room', function (whiteboardName) {
+        client.join(whiteboardName);
+        console.log('joined...', whiteboardName);
     });
     
-    // Create a room
-    client.on('create room', function (roomName) {
-        var user = client.id;
-        // If room name is empty throw error to caller
-        if (!roomName) {
-            io.to(user).emit('error', 'null pointer');
-            return;
-        }
-        // If room name already exists
-        if(roomExists(roomName)) {
-            io.to(user).emit('error', 'room already exists');
-            return;
-        } else {
-            client.join(roomName);
-        }
+    // Create a whiteboard
+    client.on('create room', function () {
+        // Generate random whiteboard id
+        var guid = uuid.v4();
+        // Save whiteboard id to database
+        
+        // Join whiteboard
+        client.join(guid);
+        console.log(guid);
     });
 
     // Send specific message to a room
-    client.on('send specific', function (msg, room) {
-        client.broadcast.to(room).emit('chat message', msg);
+    client.on('send specific', function (msg, whiteboard) {
+        var user = client.id;
+        if (!msg){
+            io.to(user).emit('error', 'msg null');
+            return;
+        }
+            
+        if (!whiteboard){
+            io.to(user).emit('error', 'room null');
+            return;
+        } 
+        client.broadcast.to(whiteboard).emit('chat message', msg);
     });
 
     // Echoes message to everyone
@@ -45,11 +57,14 @@ io.on('connection', function (client) {
     });
 });
 
-function roomExists(roomName) {
+/**
+ * When user tries to create a room check if it already exists
+ */
+/*function roomExists(roomName) {
     for (var room in io.sockets.adapter.rooms) {
         if (room === roomName) {
             return true;
         }
     }
     return false;
-}
+}*/

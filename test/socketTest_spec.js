@@ -33,28 +33,27 @@ describe('Sockets testing suite', function () {
         });
     });
 
-    it('create room should throw exception if room name is empty', function (done) {
+    it('send specific should throw error if message is null', function (done) {
         var client = io.connect(socketUrl, options);
         client.once('connect', function () {
             client.once('error', function (msg) {
-                msg.should.equal('null pointer');
+                msg.should.equal('msg null');
                 client.disconnect();
                 done();
             });
-            client.emit('create room', '');
+            client.emit('send specific', '', 'room');
         });
     });
 
-    it('create room should throw exception if room name already exists', function (done) {
+    it('send specific should throw error if room is null', function (done) {
         var client = io.connect(socketUrl, options);
-        client.emit('create room', 'room');
         client.once('connect', function () {
             client.once('error', function (msg) {
-                msg.should.equal('room already exists');
+                msg.should.equal('room null');
                 client.disconnect();
                 done();
             });
-            client.emit('create room', 'room');
+            client.emit('send specific', 'msg', '');
         });
     });
 });
