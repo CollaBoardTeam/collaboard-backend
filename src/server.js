@@ -5,6 +5,7 @@ var app = require('express')();
 var http = require('http');
 var logger = require('morgan');
 var path = require('path');
+var bodyParser = require('body-parser');
 
 /**
  * Server configuration
@@ -16,14 +17,18 @@ var server = exports.server = http.createServer(app).listen(port, function () {
 
 // Express configuration
 app.use(logger('dev'));
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: false }));
 
 // Declare routes
 var index = require('./app/routes/index');
 var public = require('./app/routes/public');
+var private = require('./app/routes/private');
 
 // Declare routes endpoints
-app.use('/', index); //http//localhost:3000/
-app.use('/public', public);
+app.use('/', index); // http://localhost:3000/
+app.use('/public', public); // http://localhost:3000/public/
+app.use('/private', private); // http://localhost:3000/private/
 
 // Sockets declaration
 require(path.resolve('src/socket.js'));
