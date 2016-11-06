@@ -19,12 +19,16 @@ app.use(logger('dev'));
 
 // Declare routes
 var index = require('./app/routes/index');
+var public = require('./app/routes/public');
 
 // Declare routes endpoints
-app.use('/', index);
+app.use('/', index); //http//localhost:3000/
+app.use('/public', public);
 
 // Sockets declaration
 require(path.resolve('src/socket.js'));
+require(path.resolve('src/dal/connector/dbConnectorMySQL')).establishConnection();
+
 
 // Need to export close server due to testing
 module.exports = {

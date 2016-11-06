@@ -1,8 +1,8 @@
 module.exports = {
     database: {
         host: "localhost",
-        user: "",
-        password: "",
+        user: "root",
+        password: "root",
         name: "collaboard"
     }
 };
