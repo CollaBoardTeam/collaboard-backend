@@ -1,8 +1,17 @@
+/**
+ * Module dependencies
+ */
 var mysql = require('mysql');
 
+/**
+ * Manage all database connections and queries
+ */
 function DBConnectorMYSQL(){
 }
 
+/**
+ * Method to establish connection with MySQL database
+ */
 DBConnectorMYSQL.prototype.establishConnection = function(){
     var config = require('../../database/config').database;
     this.pool  = mysql.createPool({
@@ -22,6 +31,12 @@ DBConnectorMYSQL.prototype.establishConnection = function(){
     });
 }
 
+/**
+ * Performs queries to MySQL with arguments
+ * @param sqlQuery - query string
+ * @param values - values to attach @ sqlQuery
+ * @param cb - callback to the caller e.g. "function(err, data)"
+ */
 DBConnectorMYSQL.prototype.performQuery = function(sqlQuery, values, cb){
 	var query = mysql.format(sqlQuery, values);
     this.pool.query(query, function(err, rows) {
@@ -32,6 +47,11 @@ DBConnectorMYSQL.prototype.performQuery = function(sqlQuery, values, cb){
     });
 }
 
+/**
+ * Performs queries to MySQL without arguments
+ * @param sqlQuery - query string
+ * @param cb - callback to the caller e.g. "function(err, data)"
+ */
 DBConnectorMYSQL.prototype.performQueryWithoutArg = function(sqlQuery, cb){
     this.pool.query(sqlQuery, function(err, rows) {
 	    if (err) {
@@ -41,8 +61,14 @@ DBConnectorMYSQL.prototype.performQueryWithoutArg = function(sqlQuery, cb){
     });
 }
 
+/**
+ * Close connection to database
+ */
 DBConnectorMYSQL.prototype.closeConnection = function(){
     this.connection.end();
 }
 
+/**
+ * Exporting a new instantiation of this
+ */
 module.exports = new DBConnectorMYSQL();
