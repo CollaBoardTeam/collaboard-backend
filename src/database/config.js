@@ -4,8 +4,8 @@
 module.exports = {
     database: {
         host: "localhost",
-        user: "root",
-        password: "root",
+        user: "colladev",
+        password: "collaboardfeup",
         name: "collaboard"
     }
 };
