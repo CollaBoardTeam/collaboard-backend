@@ -6,7 +6,7 @@ var path = require('path');
 
 var io = require('socket.io-client');
 
-var socketUrl = 'http://localhost:3001';
+var socketUrl = 'http://localhost:3000';
 
 describe('Sockets testing suite', function () {
     
