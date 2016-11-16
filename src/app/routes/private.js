@@ -8,6 +8,7 @@ var wrapper = require(path.resolve('src/dal/repository/wrapper'));
 
 
 //Create whiteboard with name
+router.post('/create-wb', function (req, res, next) { //http://localhost:3000/
     var result = wrapper.createWhiteboard(req.body, function(err, data){
         if(err) {
             res.json({
