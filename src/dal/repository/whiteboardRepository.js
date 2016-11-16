@@ -16,11 +16,8 @@ function WhiteboardRepository(){
  * @param cb - callback to method caller e.g. "function(err, data)"
  */
 WhiteboardRepository.prototype.create = function(jsonContent, cb){
-    // var values = [jsonContent.whiteboardID, jsonContent.userID];
-    // Susceptible to changes!
-    var values = [jsonContent.whiteboardID, jsonContent.layoutID, jsonContent.whiteboardName, jsonContent.creationDate];
-    // Hard coded query: insert into whiteboard values (whiteboardID, layoutID, boardName, creationDate);
-    connector.performQuery('insert into whiteboard values (?,?,?,?);', values, function(err, data){
+    var values = [jsonContent.layoutID, jsonContent.boardName, jsonContent.userID];
+    connector.performQuery('CALL createWhiteBoard(?,?,?)', values, function(err, data){
         if (err){
             cb(err, null);
         } else {
@@ -34,9 +31,8 @@ WhiteboardRepository.prototype.create = function(jsonContent, cb){
  * @param jsonContent - json string with info
  * @param cb - callback to method caller e.g. "function(err, data)"
  */
-WhiteboardRepository.prototype.getWhiteboardByUser = function(jsonContent, cb){
-    // Hard coded query: select * from userWhiteboard where idUserFK = ?;
-    connector.performQuery('select * from userWhiteboard where idUserFK = ?',jsonContent.userID, function(err, data){
+WhiteboardRepository.prototype.getWhiteboardByUser = function(userID, cb){
+    connector.performQuery('CALL whiteBoardByUser(?)', userID, function(err, data){
         if (err){
             cb(err, null);
         } else {
@@ -50,8 +46,8 @@ WhiteboardRepository.prototype.getWhiteboardByUser = function(jsonContent, cb){
  * @param jsonContent - json string with info to save
  * @param cb - callback to method caller e.g. "function(err, data)"
  */
-WhiteboardRepository.prototype.getWhiteboardContent = function(jsonContent, cb){
-    connector.performQuery('',jsonContent.whiteboardID, function(err, data){
+WhiteboardRepository.prototype.getWhiteboardContent = function(wbID, cb){
+    connector.performQuery('CALL whiteBoardContent(?)', wbID, function(err, data){
         if (err){
             cb(err, null);
         } else {

@@ -8,7 +8,6 @@ var wrapper = require(path.resolve('src/dal/repository/wrapper'));
 
 
 //Create whiteboard with name
-router.post('/create-wb', function (req, res, next) { // http://localhost:3000/create-wb
     var result = wrapper.createWhiteboard(req.body, function(err, data){
         if(err) {
             res.json({
@@ -24,8 +23,9 @@ router.post('/create-wb', function (req, res, next) { // http://localhost:3000/c
     });
 });
 
+//Create sticky note
+router.post('/create-st', function (req, res, next) { //http://localhost:3000/
 // Create sticky note
-router.post('/create-st', function(req, res, next) { // http://localhost:3000/edit-st
     var result = wrapper.createStickyNote(req.body, function(err, data){
         if(err) {
             res.json({
@@ -42,7 +42,7 @@ router.post('/create-st', function(req, res, next) { // http://localhost:3000/ed
 });
 
 //Edit sticky note
-router.post('/edit-st', function (req, res, next) { // http://localhost:3000/edit-st
+router.put('/edit-st', function (req, res, next) { //http://localhost:3000/
     var result = wrapper.editStickyNote(req.body, function(err, data){
         if(err) {
             res.json({
@@ -59,7 +59,7 @@ router.post('/edit-st', function (req, res, next) { // http://localhost:3000/edi
 });
 
 //Delete sticky note
-router.post('/delete-st', function (req, res, next) { //http://localhost:3000/delete-st
+router.delete('/delete-st', function (req, res, next) { //http://localhost:3000/
     var result = wrapper.deleteStickyNote(req.body, function(err, data){
         if(err) {
             res.json({
@@ -68,8 +68,8 @@ router.post('/delete-st', function (req, res, next) { //http://localhost:3000/de
             });
         } else {
             res.json({
-                error: false,
-                message: data
+                error: false, 
+                message: 'Sticky Note deleted!'
             });
         }
     });
