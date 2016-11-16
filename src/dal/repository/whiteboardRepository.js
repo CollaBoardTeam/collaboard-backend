@@ -28,7 +28,7 @@ WhiteboardRepository.prototype.create = function(jsonContent, cb){
 
 /**
  * Method to return registries of a user's whiteboard
- * @param jsonContent - json string with info to save
+ * @param jsonContent - json string with info
  * @param cb - callback to method caller e.g. "function(err, data)"
  */
 WhiteboardRepository.prototype.getWhiteboardByUser = function(userID, cb){

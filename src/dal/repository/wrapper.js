@@ -43,8 +43,6 @@ Wrapper.prototype.editStickyNote = function(jsonContent, cb){
 }
 
 /**
- * @EXPERIMENTAL
- * NOT FINISHED. DO NOT USE!
  * Calls stickyNoteRepository to delete a sticky note
  * @param jsonContent - json string with content of sticky note
  * @param cb - callback to the method caller e.g. "function (err, data)"
