@@ -16,8 +16,8 @@ function WhiteboardRepository(){
  * @param cb - callback to method caller e.g. "function(err, data)"
  */
 WhiteboardRepository.prototype.create = function(jsonContent, cb){
-    var values = [jsonContent.message.wbID, jsonContent.message.userID];
-    connector.performQuery('',values, function(err, data){
+    var values = [jsonContent.layoutID, jsonContent.boardName, jsonContent.userID];
+    connector.performQuery('CALL createWhiteBoard(?,?,?)', values, function(err, data){
         if (err){
             cb(err, null);
         } else {
@@ -31,8 +31,8 @@ WhiteboardRepository.prototype.create = function(jsonContent, cb){
  * @param jsonContent - json string with info to save
  * @param cb - callback to method caller e.g. "function(err, data)"
  */
-WhiteboardRepository.prototype.getWhiteboardByUser = function(jsonContent, cb){
-    connector.performQuery('',jsonContent.message.userID, function(err, data){
+WhiteboardRepository.prototype.getWhiteboardByUser = function(userID, cb){
+    connector.performQuery('CALL whiteBoardByUser(?)', userID, function(err, data){
         if (err){
             cb(err, null);
         } else {
@@ -46,8 +46,8 @@ WhiteboardRepository.prototype.getWhiteboardByUser = function(jsonContent, cb){
  * @param jsonContent - json string with info to save
  * @param cb - callback to method caller e.g. "function(err, data)"
  */
-WhiteboardRepository.prototype.getWhiteboardContent = function(jsonContent, cb){
-    connector.performQuery('',jsonContent.message.wbID, function(err, data){
+WhiteboardRepository.prototype.getWhiteboardContent = function(wbID, cb){
+    connector.performQuery('CALL whiteBoardContent(?)', wbID, function(err, data){
         if (err){
             cb(err, null);
         } else {

@@ -16,8 +16,8 @@ function StickyNoteRepository(){
  * @param cb - callback to method caller e.g. "function(err, data)"
  */
 StickyNoteRepository.prototype.create = function(jsonContent, cb){
-    var values = [jsonContent.message.wbID,jsonContent.message.content,jsonContent.message.position];
-    connector.performQuery('',values, function(err, data){
+    var values = [jsonContent.userID, jsonContent.content, jsonContent.position, jsonContent.wbGroupID];
+    connector.performQuery('CALL createStickyNote(?,?,?,?)',values, function(err, data){
         if (err){
             cb(err, null);
         } else {
@@ -32,8 +32,8 @@ StickyNoteRepository.prototype.create = function(jsonContent, cb){
  * @param cb - callback to method caller e.g. "function(err, data)"
  */
 StickyNoteRepository.prototype.edit = function(jsonContent, cb){
-    var values = [jsonContent.message.snID, jsonContent.message.content, jsonContent.message.position];
-    connector.performQuery('',values, function(err, data){
+    var values = [jsonContent.snID, jsonContent.contentLine, jsonContent.lineID];
+    connector.performQuery('CALL editStickyNote(?,?,?)',values, function(err, data){
         if (err){
             cb(err, null);
         } else {
@@ -49,7 +49,7 @@ StickyNoteRepository.prototype.edit = function(jsonContent, cb){
  */
 StickyNoteRepository.prototype.delete = function(jsonContent, cb){
     var snID = jsonContent.snID;
-    connector.performQuery('',snID, function(err, data){
+    connector.performQuery('CALL deleteStickyNote(?)',snID, function(err, data){
         if (err){
             cb(err, null);
         } else {

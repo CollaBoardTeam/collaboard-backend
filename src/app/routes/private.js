@@ -24,8 +24,25 @@ router.post('/create-wb', function (req, res, next) { //http://localhost:3000/
     });
 });
 
+//Create sticky note
+router.post('/create-st', function (req, res, next) { //http://localhost:3000/
+    var result = wrapper.createStickyNote(req.body, function(err, data){
+        if(err) {
+            res.json({
+                error: true,
+                message: err
+            });
+        } else {
+            res.json({
+                error: false,
+                message: data
+            });
+        }
+    });
+});
+
 //Edit sticky note
-router.post('/edit-st', function (req, res, next) { //http://localhost:3000/
+router.put('/edit-st', function (req, res, next) { //http://localhost:3000/
     var result = wrapper.editStickyNote(req.body, function(err, data){
         if(err) {
             res.json({
@@ -42,7 +59,7 @@ router.post('/edit-st', function (req, res, next) { //http://localhost:3000/
 });
 
 //Delete sticky note
-router.post('/delete-st', function (req, res, next) { //http://localhost:3000/
+router.delete('/delete-st', function (req, res, next) { //http://localhost:3000/
     var result = wrapper.deleteStickyNote(req.body, function(err, data){
         if(err) {
             res.json({
@@ -51,8 +68,8 @@ router.post('/delete-st', function (req, res, next) { //http://localhost:3000/
             });
         } else {
             res.json({
-                error: false,
-                message: data
+                error: false, 
+                message: 'Sticky Note deleted!'
             });
         }
     });
