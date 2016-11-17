@@ -98,8 +98,8 @@ USE `collaboard`$$
 create procedure whiteBoardByUser(in inputIdUser int)
 begin
 	select idWhiteBoard,boardName,idLayoutFK,boardDate,description from whiteBoard join userWhiteBoard on
-    whiteBoard.idWhiteBoard=userwhiteBoard.idWhiteBoardFK join
-    user on userwhiteboard.idUserFK=user.IdUser join role on
+    whiteBoard.idWhiteBoard=userWhiteBoard.idWhiteBoardFK join
+    user on userWhiteBoard.idUserFK=user.IdUser join role on
     userWhiteBoard.idRollFK=role.idRole
     where user.IdUser=inputIdUser;
 end$$
