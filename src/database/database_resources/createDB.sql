@@ -5,8 +5,8 @@ USE collaboard;
 CREATE TABLE IF NOT EXISTS user(IdUser INT NOT NULL AUTO_INCREMENT,
     	PRIMARY KEY(idUser),
     	fullName VARCHAR(255),
-    	email VARCHAR(100),
-    	password VARCHAR(25));
+    	email VARCHAR(100) NOT NULL UNIQUE,
+    	password VARCHAR(25)) NOT NULL;
 
 CREATE TABLE IF NOT EXISTS color(idColor INT NOT NULL AUTO_INCREMENT,
     	PRIMARY KEY(idColor),
