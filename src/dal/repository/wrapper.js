@@ -4,7 +4,7 @@
 var path = require('path');
 var whiteboardRepo = require(path.resolve('src/dal/repository/whiteboardRepository'));
 var stickyNoteRepo = require(path.resolve('src/dal/repository/stickyNoteRepository'));
-var utilityRepo = require(path.resolve('src/dal/repository/UtilityRepository'));
+var utilityRepo = require(path.resolve('src/dal/repository/utilityRepository'));
 
 
 /**
