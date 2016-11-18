@@ -76,4 +76,21 @@ router.delete('/delete-st/:stickyID', function (req, res, next) { //http://local
     });
 });
 
+//Edit sticky note color
+router.put('/edit-st-color', function (req, res, next) { //http://localhost:3000/
+    var result = wrapper.editStickyNote(req.body, function(err, data){
+        if(err) {
+            res.json({
+                error: true,
+                message: err
+            });
+        } else {
+            res.json({
+                error: false,
+                message: data
+            });
+        }
+    });
+});
+
 module.exports = router;

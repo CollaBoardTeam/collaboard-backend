@@ -58,6 +58,22 @@ StickyNoteRepository.prototype.delete = function(jsonContent, cb){
 }
 
 /**
+ * Method to delete a database registry of a sticky note
+ * @param jsonContent - json string with info to save
+ * @param cb - callback to method caller e.g. "function(err, data)"
+ */
+StickyNoteRepository.prototype.editStickyNoteColors = function(jsonContent, cb){
+        var values = [jsonContent.snID, jsonContent.snColorID];
+    connector.performQuery('CALL editColorSticky(?,?)', values, function(err, data){
+        if (err){
+            cb(err, null);
+        } else {
+            cb(null, data);
+        }
+    });
+}
+
+/**
  * Exporting an instantiation of this
  */
 module.exports = new StickyNoteRepository();

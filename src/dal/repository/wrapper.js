@@ -120,6 +120,21 @@ Wrapper.prototype.getColors = function(jsonContent, cb){
 }
 
 /**
+ * Calls whiteboardRepository to get whiteboard content
+ * @param jsonContent - json string with info
+ * @param cb - callback to the method caller e.g. "function (err, data)"
+ */
+Wrapper.prototype.editStickyNoteColor = function(jsonContent, cb){
+    utilityRepo.getColors(jsonContent, function(err, data){
+        if (err) {
+            cb(err, null);
+        } else {
+            cb(null, data);
+        }
+    });
+}
+
+/**
  * Exporting a new instantiation of this
  */
 module.exports = new Wrapper();
