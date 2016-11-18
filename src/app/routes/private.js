@@ -60,8 +60,8 @@ router.put('/edit-st', function (req, res, next) { //http://localhost:3000/
 });
 
 //Delete sticky note
-router.delete('/delete-st', function (req, res, next) { //http://localhost:3000/
-    var result = wrapper.deleteStickyNote(req.body, function(err, data){
+router.delete('/delete-st/:stickyID', function (req, res, next) { //http://localhost:3000/
+    var result = wrapper.deleteStickyNote(req.params.stickyID, function(err, data){
         if(err) {
             res.json({
                 error: true,
