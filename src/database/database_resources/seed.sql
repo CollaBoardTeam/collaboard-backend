@@ -10,9 +10,9 @@ insert into groupo values(null, 1, 'grupoTeste', 1);
 insert into userWhiteBoard values(1,1,2);
 insert into stickyNote values(null,1,'2016-11-16',1,1,1);
 insert into stickyNoteLine values(1,1,'Sample inside StickyNote');
-insert into color(null,'FFEB3B');
-insert into color(null,'4FC3F7');
-insert into color(null,'CDDC39');
-insert into color(null,'9E9E9E');
-insert into color(null,'FFFFFF');
+insert into color values(null,'FFEB3B');
+insert into color values(null,'4FC3F7');
+insert into color values(null,'CDDC39');
+insert into color values(null,'9E9E9E');
+insert into color values (null,'FFFFFF');
 
