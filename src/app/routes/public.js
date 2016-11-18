@@ -42,4 +42,22 @@ router.get('/get_wb_content/:wbID', function (req, res, next) { //http://localho
     });
 });
 
+//Get whiteboard content by whiteboard id
+router.get('/get-colors', function (req, res, next) { //http://localhost:3000/get_wb_content
+    //var result = wrapper.getWhiteboardContent(req.get('wbID'), function(err, data){
+    var result = wrapper.getColors(function(err, data){        
+        if(err) {
+            res.send({
+                error: true,
+                message: err
+            });
+        } else {
+            res.send({
+                error: false,
+                message: data
+            });
+        }
+    });
+});
+
 module.exports = router;

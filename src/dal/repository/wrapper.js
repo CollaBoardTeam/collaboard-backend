@@ -4,6 +4,8 @@
 var path = require('path');
 var whiteboardRepo = require(path.resolve('src/dal/repository/whiteboardRepository'));
 var stickyNoteRepo = require(path.resolve('src/dal/repository/stickyNoteRepository'));
+var utilityRepo = require(path.resolve('src/dal/repository/UtilityRepository'));
+
 
 /**
  * Wrapper to group all database queries in one module
@@ -94,6 +96,21 @@ Wrapper.prototype.getWhiteboardsByUser = function(jsonContent, cb){
  */
 Wrapper.prototype.getWhiteboardContent = function(jsonContent, cb){
     whiteboardRepo.getWhiteboardContent(jsonContent, function(err, data){
+        if (err) {
+            cb(err, null);
+        } else {
+            cb(null, data);
+        }
+    });
+}
+
+/**
+ * Calls whiteboardRepository to get whiteboard content
+ * @param jsonContent - json string with info
+ * @param cb - callback to the method caller e.g. "function (err, data)"
+ */
+Wrapper.prototype.getColors = function(jsonContent, cb){
+    utilityRepo.getColors(jsonContent, function(err, data){
         if (err) {
             cb(err, null);
         } else {

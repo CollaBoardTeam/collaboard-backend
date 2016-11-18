@@ -52,9 +52,9 @@ DBConnectorMYSQL.prototype.performQuery = function(sqlQuery, values, cb){
  * @param sqlQuery - query string
  * @param cb - callback to the caller e.g. "function(err, data)"
  */
-DBConnectorMYSQL.prototype.performQueryWithoutArg = function(sqlQuery,values, cb){
-    this.pool.query(procedure,values, function(err, rows) {
-	    if (err) {
+DBConnectorMYSQL.prototype.performQueryWithoutArg = function(sqlQuery, cb){
+    this.pool.query(sqlQuery, function(err, rows) {
+        if (err) {
             cb(err, null);
         } else
             cb(null, rows[0]);
