@@ -31,15 +31,16 @@ DELIMITER ;
 DROP procedure IF EXISTS `createStickyNote`;
 DELIMITER $$
 USE `collaboard`$$
-create procedure createStickyNote(in inputIdUser int,in inputContent varchar(255),in inputPosition int,in inputIdGroup int)
+create procedure createStickyNote(in inputIdUser int,in inputContent varchar(255),in inputPosition int,in inputIdWhiteBoard int)
 begin
-    declare varColor,varKey INT;
+    declare varColor,varKey,varGroup INT;
     select min(idColor) into varColor from color;
 if(varColor is null)then
     insert into color values (null,'FFFFFF');
     select min(idColor) into varColor from color;
 end if;
-insert into stickyNote values(null,inputPosition,CURDATE(),inputIdGroup,inputIdUser,varColor);
+select min(idGroup) into varGroup from groupo where groupo.idWhiteBoardFK=inputIdWhiteBoard;
+insert into stickyNote values(null,inputPosition,CURDATE(),varGroup,inputIdUser,varColor);
 select last_insert_id() into varKey;
 insert into stickyNoteLine values(1,varKey,inputContent);
 select stickyNote.idSticky,stickyNote.stickyIndex,stickyNote.stickyDate,
@@ -97,11 +98,16 @@ DELIMITER $$
 USE `collaboard`$$
 create procedure whiteBoardByUser(in inputIdUser int)
 begin
-	select idWhiteBoard,boardName,idLayoutFK,boardDate,description from whiteBoard join userWhiteBoard on
+	select P.idWhiteBoard,P.boardName,P.idLayoutFK,P.boardDate,P.description,Q.fullName from 
+    (select idWhiteBoard,boardName,idLayoutFK,boardDate,description from whiteBoard join userWhiteBoard on
+    whiteBoard.idWhiteBoard=userWhiteBoard.idWhiteBoardFK join
+    user on userWhiteBoard.idUserFK=user.IdUser join role on
+    userWhiteBoard.idRollFK=role.idRole where user.IdUser=inputIdUser) as P  join
+    (select idWhiteBoard,fullName from whiteBoard join userWhiteBoard on
     whiteBoard.idWhiteBoard=userWhiteBoard.idWhiteBoardFK join
     user on userWhiteBoard.idUserFK=user.IdUser join role on
     userWhiteBoard.idRollFK=role.idRole
-    where user.IdUser=inputIdUser;
+    where role.description='owner') as Q on P.idWhiteBoard=Q.idWhiteBoard;
 end$$
 DELIMITER ;
 
