@@ -82,13 +82,14 @@ DELIMITER $$
 USE `collaboard`$$
 create procedure whiteBoardContent(in inputIdWhiteBoard int)
 begin
-    select idSticky,stickyIndex,stickyDate,indexLine,lineContent
+    select idSticky,stickyIndex,stickyDate,indexLine,lineContent,color,boardName,idWhiteBoard
     from whiteBoard join groupo on
     whiteBoard.idWhiteBoard=groupo.idWhiteBoardFK
     join stickyNote on groupo.IdGroup=stickyNote.idGroupFK
     join StickyNoteLine on 
     stickyNoteLine.idStickyNoteFK=stickyNote.idSticky
-    join line on line.IdLine=stickyNoteLine.idLineFK
+    join line on line.IdLine=stickyNoteLine.idLineFK join color
+    on stickyNote.idColorFK=color.idColor
     where idWhiteBoardFK=inputIdWhiteBoard;
 end$$
 DELIMITER ;
@@ -109,6 +110,26 @@ begin
     user on userWhiteBoard.idUserFK=user.IdUser join role on
     userWhiteBoard.idRollFK=role.idRole
     where role.description='owner') as Q on P.idWhiteBoard=Q.idWhiteBoard;
+end$$
+DELIMITER ;
+
+DROP procedure IF EXISTS `editColorSticky`;
+DELIMITER $$
+USE `collaboard`$$
+create procedure editColorSticky(in inputIdSticky int,in inputIdColor int)
+begin
+    UPDATE stickyNote
+    SET idColorFK=inputIdColor
+    WHERE stickyNote.idSticky=inputIdSticky;
+end$$
+DELIMITER ;
+
+DROP procedure IF EXISTS `getColors`;
+DELIMITER $$
+USE `collaboard`$$
+create procedure getColors()
+begin
+    select * from color;
 end$$
 DELIMITER ;
 
