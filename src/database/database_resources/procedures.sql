@@ -21,7 +21,7 @@ begin
         insert into user values(inputIdUser,'testname','testemail','testpass');
         insert into userWhiteBoard  values(varLastId,inputIdUser,2);
 	end if;
-        insert into groupo values(null,varLastId,'Groupo Default',1)
+        insert into groupo values(null,varLastId,'Groupo Default',1);
 		select idWhiteBoard,boardName,idLayoutFK,boardDate,description from whiteBoard 
         join userWhiteBoard  on whiteBoard.idWhiteBoard=userWhiteBoard .idWhiteBoardFK join
         user on userWhiteBoard .idUserFK=user.IdUser join role on userWhiteBoard .idRollFK=role.idRole
