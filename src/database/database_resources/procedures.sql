@@ -1,3 +1,7 @@
+-- *************************************************************
+--                      CREATION PROCEDURES 
+-- *************************************************************
+
 USE `collaboard`;
 DROP procedure IF EXISTS `createWhiteBoard`;
 DELIMITER $$
@@ -51,31 +55,22 @@ line on stickyNoteLine.idLineFK=line.idLine where stickyNote.idSticky=varKey;
 end$$
 DELIMITER ;
 
-DROP procedure IF EXISTS `deleteStickyNote`;
+DROP procedure IF EXISTS `createGroupWB`;
 DELIMITER $$
 USE `collaboard`$$
-create procedure deleteStickyNote(in inputIdSticky int)
+create procedure createGroupWB(in inputIdWhiteBoard int,in inputGroupName varchar(100))
 begin
-    delete from stickyNoteLine where stickyNoteLine.idStickyNoteFK=inputIdSticky;
-    delete from stickyNote where stickyNote.idSticky=inputIdSticky;
+    DECLARE varIndex,varLastId INT;
+    select max(indexGroup)+1 into varIndex from groupo where idWhiteBoardFK=inputIdWhiteBoard;
+	insert into groupo values(null,inputIdWhiteBoard,inputGroupName,varIndex);
+    select last_insert_id() into varLastId;
+    select * from groupo where idGroup=varLastId;
 end$$
 DELIMITER ;
 
-DROP procedure IF EXISTS `editStickyNote`;
-DELIMITER $$
-USE `collaboard`$$
-create procedure editStickyNote(in inputIdSticky int,in inputLineContent varchar(255), in inputIdLine int)
-begin
-    UPDATE stickyNoteLine
-    SET lineContent=inputLineContent
-    WHERE (idLineFK,idStickyNoteFK)=(inputIdLine,inputIdSticky);
-    select stickynote.idSticky,stickyNote.stickyIndex,stickyNote.stickyDate,
-    stickyNoteLine.lineContent,line.indexLine from stickyNote join stickyNoteLine on
-    stickyNote.idSticky=stickyNoteLine.idStickyNoteFK join 
-    line on stickyNoteLine.idLineFK=line.idLine where stickyNote.idSticky=inputIdSticky
-    and line.idLine=inputIdLine ;
-end$$
-DELIMITER ;
+-- *************************************************************
+--                      GET PROCEDURES 
+-- *************************************************************
 
 DROP procedure IF EXISTS `whiteBoardContent`;
 DELIMITER $$
@@ -113,6 +108,19 @@ begin
 end$$
 DELIMITER ;
 
+DROP procedure IF EXISTS `getColors`;
+DELIMITER $$
+USE `collaboard`$$
+create procedure getColors()
+begin
+    select * from color;
+end$$
+DELIMITER ;
+
+-- *************************************************************
+--                      UPDATE PROCEDURES 
+-- *************************************************************
+
 DROP procedure IF EXISTS `editColorSticky`;
 DELIMITER $$
 USE `collaboard`$$
@@ -124,13 +132,54 @@ begin
 end$$
 DELIMITER ;
 
-DROP procedure IF EXISTS `getColors`;
+DROP procedure IF EXISTS `editStickyNote`;
 DELIMITER $$
 USE `collaboard`$$
-create procedure getColors()
+create procedure editStickyNote(in inputIdSticky int,in inputLineContent varchar(255), in inputIdLine int)
 begin
-    select * from color;
+    UPDATE stickyNoteLine
+    SET lineContent=inputLineContent
+    WHERE (idLineFK,idStickyNoteFK)=(inputIdLine,inputIdSticky);
+    select stickynote.idSticky,stickyNote.stickyIndex,stickyNote.stickyDate,
+    stickyNoteLine.lineContent,line.indexLine from stickyNote join stickyNoteLine on
+    stickyNote.idSticky=stickyNoteLine.idStickyNoteFK join 
+    line on stickyNoteLine.idLineFK=line.idLine where stickyNote.idSticky=inputIdSticky
+    and line.idLine=inputIdLine ;
 end$$
 DELIMITER ;
+
+-- *************************************************************
+--                      DELETE PROCEDURES 
+-- *************************************************************
+
+DROP procedure IF EXISTS `deleteStickyNote`;
+DELIMITER $$
+USE `collaboard`$$
+create procedure deleteStickyNote(in inputIdSticky int)
+begin
+    delete from stickyNoteLine where stickyNoteLine.idStickyNoteFK=inputIdSticky;
+    delete from stickyNote where stickyNote.idSticky=inputIdSticky;
+end$$
+DELIMITER ;
+
+DROP procedure IF EXISTS `deleteWhiteBoard`;
+DELIMITER $$
+USE `collaboard`$$
+create procedure deleteWhiteBoard(in inputIdWhiteBoard int,in inputIdUser int)
+begin
+    DECLARE varUser INT;
+    select idRole into varUser from user join userwhiteboard on
+    user.IdUser=userWhiteBoard.idUserFK join
+    role on userWhiteBoard.idRollFK=role.idRole
+    where idWhiteBoardFK=inputIdWhiteBoard and idUserFK=inputIdUser and role.description='owner';
+    if (varUser IS NOT NULL) THEN
+    DELETE FROM whiteBoard where idWhiteBoard=inputIdWhiteBoard;
+    end if;
+end$$
+DELIMITER ;
+
+
+
+
 
 
