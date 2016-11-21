@@ -25,6 +25,7 @@ CREATE TABLE IF NOT EXISTS whiteBoard(idWhiteBoard INT NOT NULL AUTO_INCREMENT,
     	idLayoutFK INT NOT NULL,
     	boardName VARCHAR(100) NOT NULL,
     	boardDate DATE,
+		locked bool,
     	PRIMARY KEY(idWhiteBoard),
     	FOREIGN KEY(idLayoutFK) REFERENCES layout(idLayout));
 

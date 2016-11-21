@@ -12,11 +12,11 @@ begin
 	select min(idLayout) into varlayout from layout where idLayout=inputIdLayout;
     select min(idUser) into varUser from user where idUser=inputIdUser;
     if (varLayout is not null) then
-		insert into whiteBoard values(null,inputIdLayout,inputBoardName,curdate());
+		insert into whiteBoard values(null,inputIdLayout,inputBoardName,curdate(),false);
         select last_insert_id() INTO varLastId;
     else 
         insert into layout(idLayout,layoutName) values(inputIdLayout,'Layout test');
-        insert into whiteBoard values(null,inputIdLayout,inputBoardName,curdate());
+        insert into whiteBoard values(null,inputIdLayout,inputBoardName,curdate(),false);
         select last_insert_id() INTO varLastId;
 	end if;
 	if (varUser is not null) then
@@ -26,7 +26,7 @@ begin
         insert into userWhiteBoard  values(varLastId,inputIdUser,2);
 	end if;
         insert into groupo values(null,varLastId,'Groupo Default',1);
-		select idWhiteBoard,boardName,idLayoutFK,boardDate,description from whiteBoard 
+		select idWhiteBoard,boardName,idLayoutFK,boardDate,description,locked from whiteBoard 
         join userWhiteBoard  on whiteBoard.idWhiteBoard=userWhiteBoard .idWhiteBoardFK join
         user on userWhiteBoard .idUserFK=user.IdUser join role on userWhiteBoard .idRollFK=role.idRole
         where whiteBoard.idWhiteBoard=varLastId;
@@ -95,8 +95,8 @@ DELIMITER $$
 USE `collaboard`$$
 create procedure whiteBoardByUser(in inputIdUser int)
 begin
-	select P.idWhiteBoard,P.boardName,P.idLayoutFK,P.boardDate,P.description,Q.fullName from 
-    (select idWhiteBoard,boardName,idLayoutFK,boardDate,description from whiteBoard join userWhiteBoard on
+	select P.idWhiteBoard,P.boardName,P.idLayoutFK,P.boardDate,P.description,Q.fullName,P.locked from 
+    (select idWhiteBoard,boardName,idLayoutFK,boardDate,description,locked from whiteBoard join userWhiteBoard on
     whiteBoard.idWhiteBoard=userWhiteBoard.idWhiteBoardFK join
     user on userWhiteBoard.idUserFK=user.IdUser join role on
     userWhiteBoard.idRollFK=role.idRole where user.IdUser=inputIdUser) as P  join
@@ -140,11 +140,28 @@ begin
     UPDATE stickyNoteLine
     SET lineContent=inputLineContent
     WHERE (idLineFK,idStickyNoteFK)=(inputIdLine,inputIdSticky);
-    select stickynote.idSticky,stickyNote.stickyIndex,stickyNote.stickyDate,
+    SELECT stickynote.idSticky,stickyNote.stickyIndex,stickyNote.stickyDate,
     stickyNoteLine.lineContent,line.indexLine from stickyNote join stickyNoteLine on
     stickyNote.idSticky=stickyNoteLine.idStickyNoteFK join 
     line on stickyNoteLine.idLineFK=line.idLine where stickyNote.idSticky=inputIdSticky
     and line.idLine=inputIdLine ;
+end$$
+DELIMITER ;
+
+USE `collaboard`;
+DROP procedure IF EXISTS `changeStateWB`;
+DELIMITER $$
+USE `collaboard`$$
+create procedure changeStateWB(in inputIdWhiteBoard INT)
+BEGIN
+    DECLARE varLocked INT;
+    select locked into varLocked from whiteboard where idWhiteBoard=inputIdWhiteBoard;
+    if(varLocked IS false) then
+        UPDATE whiteBoard set locked=true where idWhiteBoard=inputIdWhiteBoard;
+    else 
+        UPDATE whiteBoard set locked=false where idWhiteBoard=inputIdWhiteBoard;
+end if;
+select * from whiteBoard where idWhiteBoard=inputIdWhiteBoard;
 end$$
 DELIMITER ;
 

@@ -4,7 +4,7 @@ insert into role values (null, 'guest');
 insert into role values (null, 'owner');
 insert into layout values(null, 'noLayout');
 insert into line values (null, 1, 1);
-insert into whiteBoard values(null,1,'WhiteBoard sample','2016-11-16');
+insert into whiteBoard values(null,1,'WhiteBoard sample','2016-11-16',true);
 insert into groupo values(null, 1, 'grupoTeste', 1);
 insert into userWhiteBoard values(1,1,2);
 
