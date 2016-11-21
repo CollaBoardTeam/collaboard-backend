@@ -1,4 +1,4 @@
-CCREATE DATABASE collaboard;
+-- CREATE DATABASE collaboard;
 
 USE collaboard;
 
