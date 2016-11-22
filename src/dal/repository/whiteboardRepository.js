@@ -57,6 +57,38 @@ WhiteboardRepository.prototype.getWhiteboardContent = function(wbID, cb){
 }
 
 /**
+ * Method to return a whiteboard content
+ * @param jsonContent - json string with info to save
+ * @param cb - callback to method caller e.g. "function(err, data)"
+ */
+WhiteboardRepository.prototype.delete = function(jsonContent, cb){
+    values = [ jsonContent.get('wbid'), jsonContent.get('userid') ];
+    connector.performQuery('CALL deleteWhiteboard(?,?)', values, function(err, data){
+        if (err){
+            cb(err, null);
+        } else {
+            cb(null, data);
+        }
+    });
+}
+
+/**
+ * Method to return a whiteboard content
+ * @param jsonContent - json string with info to save
+ * @param cb - callback to method caller e.g. "function(err, data)"
+ */
+WhiteboardRepository.prototype.addGroup = function(jsonContent, cb){
+    var values = [ jsonContent.wbid, jsonContent.groupname ];
+    console.log(values);
+    connector.performQuery('CALL createGroupWB(?,?)', values, function(err, data){
+        if (err){
+            cb(err, null);
+        } else {
+            cb(null, data);
+        }
+    });
+}
+/**
  * Exporting a new instantiation of this
  */
 module.exports = new WhiteboardRepository();

@@ -93,4 +93,39 @@ router.put('/edit-st-color', function (req, res, next) { //http://localhost:3000
     });
 });
 
+//Delete whiteboard
+router.delete('/delete-wb', function (req, res, next) { //http://localhost:3000/
+    var result = wrapper.deleteWhiteboard(req, function(err, data){
+        if(err) {
+            res.json({
+                error: true,
+                message: err
+            });
+        } else {
+            res.json({
+                error: false, 
+                message: 'Whiteboard deleted!'
+            });
+        }
+    });
+});
+
+//Add new group to whiteboard
+router.post('/add-group-wb', function (req, res, next) { //http://localhost:3000/
+    var result = wrapper.addGroupToWhiteboard(req.body, function(err, data){
+        if(err) {
+            res.json({
+                error: true,
+                message: err
+            });
+        } else {
+            res.json({
+                error: false, 
+                message: data
+            });
+        }
+    });
+});
+
+
 module.exports = router;

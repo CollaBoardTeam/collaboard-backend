@@ -135,6 +135,36 @@ Wrapper.prototype.editStickyNoteColor = function(jsonContent, cb){
 }
 
 /**
+ * Calls stickyNoteRepository to delete a sticky note
+ * @param jsonContent - json string with content of sticky note
+ * @param cb - callback to the method caller e.g. "function (err, data)"
+ */
+Wrapper.prototype.deleteWhiteboard = function(jsonContent, cb){
+    whiteboardRepo.delete(jsonContent, function(err, data){
+        if (err) {
+            cb(err, null);
+        } else {
+            cb(null, data);
+        }
+    });
+}
+
+/**
+ * Calls stickyNoteRepository to delete a sticky note
+ * @param jsonContent - json string with content of sticky note
+ * @param cb - callback to the method caller e.g. "function (err, data)"
+ */
+Wrapper.prototype.addGroupToWhiteboard = function(jsonContent, cb){
+    whiteboardRepo.addGroup(jsonContent, function(err, data){
+        if (err) {
+            cb(err, null);
+        } else {
+            cb(null, data);
+        }
+    });
+}
+
+/**
  * Exporting a new instantiation of this
  */
 module.exports = new Wrapper();
