@@ -125,7 +125,7 @@ Wrapper.prototype.getColors = function(jsonContent, cb){
  * @param cb - callback to the method caller e.g. "function (err, data)"
  */
 Wrapper.prototype.editStickyNoteColor = function(jsonContent, cb){
-    utilityRepo.getColors(jsonContent, function(err, data){
+    stickyNoteRepo.editStickyNoteColors(jsonContent, function(err, data){
         if (err) {
             cb(err, null);
         } else {
