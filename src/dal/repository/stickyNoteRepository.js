@@ -16,8 +16,9 @@ function StickyNoteRepository(){
  * @param cb - callback to method caller e.g. "function(err, data)"
  */
 StickyNoteRepository.prototype.create = function(jsonContent, cb){
-    var values = [jsonContent.userID, jsonContent.content, jsonContent.position, jsonContent.wbGroupID];
-    connector.performQuery('CALL createStickyNote(?,?,?,?)',values, function(err, data){
+    var values = [jsonContent.userID, jsonContent.content, jsonContent.position, jsonContent.wbGroupID, jsonContent.colorID];
+    console.log(values);
+    connector.performQuery('CALL createStickyNote(?,?,?,?,?)',values, function(err, data){
         if (err){
             cb(err, null);
         } else {
