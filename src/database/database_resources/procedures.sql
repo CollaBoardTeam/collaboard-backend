@@ -36,16 +36,11 @@ DELIMITER ;
 DROP procedure IF EXISTS `createStickyNote`;
 DELIMITER $$
 USE `collaboard`$$
-create procedure createStickyNote(in inputIdUser int,in inputContent varchar(255),in inputPosition int,in inputIdWhiteBoard int)
+create procedure createStickyNote(in inputIdUser int,in inputContent varchar(255),in inputPosition int,in inputIdWhiteBoard int,in inputIdColor)
 begin
-    declare varColor,varKey,varGroup INT;
-    select min(idColor) into varColor from color;
-if(varColor is null)then
-    insert into color values (null,'FFFFFF');
-    select min(idColor) into varColor from color;
-end if;
+    declare varKey,varGroup INT;
 select min(idGroup) into varGroup from groupo where groupo.idWhiteBoardFK=inputIdWhiteBoard;
-insert into stickyNote values(null,inputPosition,CURDATE(),varGroup,inputIdUser,varColor);
+insert into stickyNote values(null,inputPosition,CURDATE(),varGroup,inputIdUser,inputIdColor);
 select last_insert_id() into varKey;
 insert into stickyNoteLine values(1,varKey,inputContent);
 select stickyNote.idSticky,stickyNote.stickyIndex,stickyNote.stickyDate,
