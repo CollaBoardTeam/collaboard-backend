@@ -36,7 +36,7 @@ DELIMITER ;
 DROP procedure IF EXISTS `createStickyNote`;
 DELIMITER $$
 USE `collaboard`$$
-create procedure createStickyNote(in inputIdUser int,in inputContent varchar(255),in inputPosition int,in inputIdWhiteBoard int,in inputIdColor)
+create procedure createStickyNote(in inputIdUser int,in inputContent varchar(255),in inputPosition int,in inputIdWhiteBoard int,in inputIdColor int)
 begin
     declare varKey,varGroup INT;
 select min(idGroup) into varGroup from groupo where groupo.idWhiteBoardFK=inputIdWhiteBoard;
@@ -72,6 +72,12 @@ DELIMITER $$
 USE `collaboard`$$
 create procedure whiteBoardContent(in inputIdWhiteBoard int)
 begin
+declare vartmp int;
+select min(idWhiteBoard) into vartmp from whiteBoard join groupo on whiteBoard.idWhiteBoard=groupo.idWhiteBoardFK
+    join stickyNote on groupo.idGroup=stickyNote.idGroupFK where idWhiteBoard=inputIdWhiteBoard;
+    if(vartmp is null) THEN
+    select * from whiteBoard where idWhiteBoard=inputIdWhiteBoard;
+    else
     select idSticky,stickyIndex,stickyDate,indexLine,lineContent,color,boardName,idWhiteBoard
     from whiteBoard join groupo on
     whiteBoard.idWhiteBoard=groupo.idWhiteBoardFK
@@ -81,6 +87,7 @@ begin
     join line on line.IdLine=stickyNoteLine.idLineFK join color
     on stickyNote.idColorFK=color.idColor
     where idWhiteBoardFK=inputIdWhiteBoard;
+    end if;
 end$$
 DELIMITER ;
 
