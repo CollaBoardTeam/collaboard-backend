@@ -94,7 +94,7 @@ router.put('/edit-st-color', function (req, res, next) { //http://localhost:3000
 });
 
 //Delete whiteboard
-router.delete('/delete-wb', function (req, res, next) { //http://localhost:3000/
+router.delete('/delete-wb/:wbid/:userid', function (req, res, next) { //http://localhost:3000/
     var result = wrapper.deleteWhiteboard(req, function(err, data){
         if(err) {
             res.json({

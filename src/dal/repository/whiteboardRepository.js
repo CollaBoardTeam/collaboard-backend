@@ -62,8 +62,9 @@ WhiteboardRepository.prototype.getWhiteboardContent = function(wbID, cb){
  * @param cb - callback to method caller e.g. "function(err, data)"
  */
 WhiteboardRepository.prototype.delete = function(jsonContent, cb){
-    values = [ jsonContent.get('wbid'), jsonContent.get('userid') ];
-    connector.performQuery('CALL deleteWhiteboard(?,?)', values, function(err, data){
+    values = [jsonContent.params.wbid,jsonContent.params.userid];
+    var jsonContentInt = values.map(Number);
+    connector.performQuery('CALL deleteWhiteboard(?,?)', jsonContentInt, function(err, data){
         if (err){
             cb(err, null);
         } else {
