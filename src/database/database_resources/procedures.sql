@@ -76,7 +76,8 @@ declare vartmp int;
 select min(idWhiteBoard) into vartmp from whiteBoard join groupo on whiteBoard.idWhiteBoard=groupo.idWhiteBoardFK
     join stickyNote on groupo.idGroup=stickyNote.idGroupFK where idWhiteBoard=inputIdWhiteBoard;
     if(vartmp is null) THEN
-    select * from whiteBoard where idWhiteBoard=inputIdWhiteBoard;
+    select * from whiteBoard where idWhiteBoard=inputIdWhiteBoard join groupo 
+    on groupo.idWhiteBoardFK=whiteBoard.idWhiteBoard;
     else
     select idSticky,stickyIndex,stickyDate,indexLine,lineContent,color,boardName,idWhiteBoard,IdGroup,groupName,indexGroup
     from whiteBoard join groupo on
