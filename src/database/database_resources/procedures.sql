@@ -198,8 +198,49 @@ begin
 end$$
 DELIMITER ;
 
-
-
+#*********************************************************************#
+# Query XPTO para o Marco babar-se todo! getWhiteboardContent         #
+#                                                                     #
+#*********************************************************************#
+USE `collaboard`;
+DROP procedure IF EXISTS `getWhiteboardContent`;
+DELIMITER $$
+USE `collaboard`$$
+create procedure getWhiteboardContent(in idWhiteboard int)
+begin
+	select json_object(
+	'whiteboardID', wb.idWhiteBoard,
+    'whiteboardName', wb.boardDate,
+    'whiteboardGroups', ( select
+							cast(
+								concat('[',
+									group_concat(
+										JSON_OBJECT(
+											'groupID', gp.idGroup, 'groupName', gp.groupName, 'groupIndex', gp.indexGroup, 'groupStickies',
+												(select
+													cast(
+														concat('[',
+															group_concat(
+																JSON_OBJECT(
+																	'stickyId', st.idSticky, 'stickyColor', color, 'stickyContent', stline.lineContent
+																)
+															),
+														']') AS JSON
+													)
+												from stickyNote as st 
+												join color as c on c.idColor = st.idColorFK
+												left join stickyNoteLine as stline on stline.idStickyNoteFK = st.idSticky
+												where st.idGroupFK = gp.idGroup )
+										)
+									),
+								']') AS JSON
+							) 
+						from groupo as gp
+                        where gp.idWhiteBoardFK = wb.idWhiteBoard )
+					) 
+			from whiteBoard as wb where wb.idWhiteBoard = idWhiteboard;
+end$$
+DELIMITER ;
 
 
 
