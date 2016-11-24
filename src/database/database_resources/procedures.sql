@@ -78,7 +78,7 @@ select min(idWhiteBoard) into vartmp from whiteBoard join groupo on whiteBoard.i
     if(vartmp is null) THEN
     select * from whiteBoard where idWhiteBoard=inputIdWhiteBoard;
     else
-    select idSticky,stickyIndex,stickyDate,indexLine,lineContent,color,boardName,idWhiteBoard
+    select idSticky,stickyIndex,stickyDate,indexLine,lineContent,color,boardName,idWhiteBoard,IdGroup,groupName,indexGroup
     from whiteBoard join groupo on
     whiteBoard.idWhiteBoard=groupo.idWhiteBoardFK
     join stickyNote on groupo.IdGroup=stickyNote.idGroupFK
