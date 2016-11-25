@@ -34,10 +34,18 @@ router.get('/get_wb_content/:wbID', function (req, res, next) { //http://localho
                 message: err
             });
         } else {
-            res.send({
-                error: false,
-                message: data
-            });
+            if (data.length !== 0){
+            var modafocka = JSON.parse(data[0].result);
+                res.send({
+                    error: false,
+                    message: modafocka
+                });
+            } else {
+                res.send({
+                    error: false,
+                    message: data
+                });
+            }
         }
     });
 });

@@ -36,16 +36,11 @@ DELIMITER ;
 DROP procedure IF EXISTS `createStickyNote`;
 DELIMITER $$
 USE `collaboard`$$
-create procedure createStickyNote(in inputIdUser int,in inputContent varchar(255),in inputPosition int,in inputIdWhiteBoard int)
+create procedure createStickyNote(in inputIdUser int,in inputContent varchar(255),in inputPosition int,in inputIdWhiteBoard int,in inputIdColor int)
 begin
-    declare varColor,varKey,varGroup INT;
-    select min(idColor) into varColor from color;
-if(varColor is null)then
-    insert into color values (null,'FFFFFF');
-    select min(idColor) into varColor from color;
-end if;
+    declare varKey,varGroup INT;
 select min(idGroup) into varGroup from groupo where groupo.idWhiteBoardFK=inputIdWhiteBoard;
-insert into stickyNote values(null,inputPosition,CURDATE(),varGroup,inputIdUser,varColor);
+insert into stickyNote values(null,inputPosition,CURDATE(),varGroup,inputIdUser,inputIdColor);
 select last_insert_id() into varKey;
 insert into stickyNoteLine values(1,varKey,inputContent);
 select stickyNote.idSticky,stickyNote.stickyIndex,stickyNote.stickyDate,
@@ -77,7 +72,14 @@ DELIMITER $$
 USE `collaboard`$$
 create procedure whiteBoardContent(in inputIdWhiteBoard int)
 begin
-    select idSticky,stickyIndex,stickyDate,indexLine,lineContent,color,boardName,idWhiteBoard
+declare vartmp int;
+select min(idWhiteBoard) into vartmp from whiteBoard join groupo on whiteBoard.idWhiteBoard=groupo.idWhiteBoardFK
+    join stickyNote on groupo.idGroup=stickyNote.idGroupFK where idWhiteBoard=inputIdWhiteBoard;
+    if(vartmp is null) THEN
+    select * from whiteBoard join groupo 
+    on groupo.idWhiteBoardFK=whiteBoard.idWhiteBoard where idWhiteBoard=inputIdWhiteBoard;
+    else
+    select idSticky,stickyIndex,stickyDate,indexLine,lineContent,color,boardName,idWhiteBoard,IdGroup,groupName,indexGroup
     from whiteBoard join groupo on
     whiteBoard.idWhiteBoard=groupo.idWhiteBoardFK
     join stickyNote on groupo.IdGroup=stickyNote.idGroupFK
@@ -86,6 +88,7 @@ begin
     join line on line.IdLine=stickyNoteLine.idLineFK join color
     on stickyNote.idColorFK=color.idColor
     where idWhiteBoardFK=inputIdWhiteBoard;
+    end if;
 end$$
 DELIMITER ;
 
@@ -195,8 +198,94 @@ begin
 end$$
 DELIMITER ;
 
+#*********************************************************************#
+# Query XPTO para o Marco babar-se todo! getWhiteboardContent         #
+#                                                                     #
+#*********************************************************************#
+USE `collaboard`;
+DROP procedure IF EXISTS `getWhiteboardContent`;
+DELIMITER $$
+USE `collaboard`$$
+create procedure getWhiteboardContent(in idWhiteboard int)
+begin
+	select json_object(
+	'whiteboardID', wb.idWhiteBoard,
+    'whiteboardName', wb.boardName,
+    'whiteboardGroups', ( select
+							cast(
+								concat('[',
+									group_concat(
+										JSON_OBJECT(
+											'groupID', gp.idGroup, 'groupName', gp.groupName, 'groupIndex', gp.indexGroup, 'groupStickies',
+												(select
+													cast(
+														concat('[',
+															group_concat(
+																JSON_OBJECT(
+																	'stickyId', st.idSticky, 'stickyColor', color, 'stickyContent', stline.lineContent
+																)
+															),
+														']') AS JSON
+													)
+												from stickyNote as st 
+												join color as c on c.idColor = st.idColorFK
+												left join stickyNoteLine as stline on stline.idStickyNoteFK = st.idSticky
+												where st.idGroupFK = gp.idGroup )
+										)
+									),
+								']') AS JSON
+							) 
+						from groupo as gp
+                        where gp.idWhiteBoardFK = wb.idWhiteBoard )
+					)  as result
+			from whiteBoard as wb where wb.idWhiteBoard = idWhiteboard;
+end$$
+DELIMITER ;
 
+-- ************************************************************
+--   addStickyNoteToGroup   Changes the group of the stickyNote 
+-- ************************************************************    
+DROP procedure IF EXISTS `addStickyNoteToGroup`;
+DELIMITER $$
+USE `collaboard`$$
+create procedure addStickyNoteToGroup(in inputIdSticky int,in inputIdGroup int)
+begin
+    UPDATE stickyNote SET idGroupFK=inputIdGroup where idSticky=inputIdSticky;
+end$$
+DELIMITER ;
 
+-- *****************************************************************
+--   changeGroupName   change existing name to a new name on a goup
+-- ********************************************************* *******   
+DROP procedure IF EXISTS `changeGroupName`;
+DELIMITER $$
+USE `collaboard`$$
+create procedure changeGroupName(in inputIdGroup int,in inputGroupName varchar(100))
+begin
+    UPDATE groupo SET groupName=inputGroupName where idGroup=inputIdGroup;
+end$$
+DELIMITER ;
 
+-- *****************************************************************
+--   changeWhiteBoardName    changes the the name of a white Board
+-- *****************************************************************   
+DROP procedure IF EXISTS `changeWhiteBoardName`;
+DELIMITER $$
+USE `collaboard`$$
+create procedure changeWhiteBoardName(in inputIdWB int,in inputWbName varchar(100))
+begin
+	UPDATE whiteboard SET boardName=inputWbName  where idWhiteBoard=inputIdWB;
+end$$
+DELIMITER ;
 
-
+-- *****************************************************************
+--   deleteGroup   deletes a group and by cascade all sticky Notes
+-- *****************************************************************
+DROP procedure IF EXISTS `deleteGroup`;
+DELIMITER $$
+USE `collaboard`$$
+create procedure deleteGroup(in inputIdGroup int)
+begin
+	DELETE FROM groupo where idGroup=inputIdGroup;
+end$$
+DELIMITER ;

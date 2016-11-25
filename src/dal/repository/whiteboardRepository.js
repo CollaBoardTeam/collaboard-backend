@@ -47,7 +47,7 @@ WhiteboardRepository.prototype.getWhiteboardByUser = function(userID, cb){
  * @param cb - callback to method caller e.g. "function(err, data)"
  */
 WhiteboardRepository.prototype.getWhiteboardContent = function(wbID, cb){
-    connector.performQuery('CALL whiteBoardContent(?)', wbID, function(err, data){
+    connector.performQuery('CALL getWhiteboardContent(?)', wbID, function(err, data){
         if (err){
             cb(err, null);
         } else {
@@ -80,7 +80,6 @@ WhiteboardRepository.prototype.delete = function(jsonContent, cb){
  */
 WhiteboardRepository.prototype.addGroup = function(jsonContent, cb){
     var values = [ jsonContent.wbid, jsonContent.groupname ];
-    console.log(values);
     connector.performQuery('CALL createGroupWB(?,?)', values, function(err, data){
         if (err){
             cb(err, null);
