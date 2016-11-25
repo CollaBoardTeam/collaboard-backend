@@ -34,15 +34,18 @@ router.get('/get_wb_content/:wbID', function (req, res, next) { //http://localho
                 message: err
             });
         } else {
-            
-            var finalResult = ({
-                error: false,
-                message: data[0].result
-            });
-            finalResult = finalResult.message.replace(/'/g,'').replace(/\\/g,'');
-            res.send(
-                finalResult
-            );
+            if (data.length !== 0){
+            var modafocka = JSON.parse(data[0].result);
+                res.send({
+                    error: false,
+                    message: modafocka
+                });
+            } else {
+                res.send({
+                    error: false,
+                    message: data
+                });
+            }
         }
     });
 });
