@@ -242,5 +242,50 @@ begin
 end$$
 DELIMITER ;
 
+-- ************************************************************
+--   addStickyNoteToGroup   Changes the group of the stickyNote 
+-- ************************************************************    
+DROP procedure IF EXISTS `addStickyNoteToGroup`;
+DELIMITER $$
+USE `collaboard`$$
+create procedure addStickyNoteToGroup(in inputIdSticky int,in inputIdGroup int)
+begin
+    UPDATE stickyNote SET idGroupFK=inputIdGroup where idSticky=inputIdSticky;
+end$$
+DELIMITER ;
 
+-- *****************************************************************
+--   changeGroupName   change existing name to a new name on a goup
+-- ********************************************************* *******   
+DROP procedure IF EXISTS `changeGroupName`;
+DELIMITER $$
+USE `collaboard`$$
+create procedure changeGroupName(in inputIdGroup int,in inputGroupName varchar(100))
+begin
+    UPDATE groupo SET groupName=inputGroupName where idGroup=inputIdGroup;
+end$$
+DELIMITER ;
 
+-- *****************************************************************
+--   changeWhiteBoardName    changes the the name of a white Board
+-- *****************************************************************   
+DROP procedure IF EXISTS `changeWhiteBoardName`;
+DELIMITER $$
+USE `collaboard`$$
+create procedure changeWhiteBoardName(in inputIdWB int,in inputWbName varchar(100))
+begin
+	UPDATE whiteboard SET boardName=inputWbName  where idWhiteBoard=inputIdWB;
+end$$
+DELIMITER ;
+
+-- *****************************************************************
+--   deleteGroup   deletes a group and by cascade all sticky Notes
+-- *****************************************************************
+DROP procedure IF EXISTS `deleteGroup`;
+DELIMITER $$
+USE `collaboard`$$
+create procedure deleteGroup(in inputIdGroup int)
+begin
+	DELETE FROM groupo where idGroup=inputIdGroup;
+end$$
+DELIMITER ;
