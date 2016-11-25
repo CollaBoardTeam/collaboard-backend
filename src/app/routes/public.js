@@ -34,10 +34,15 @@ router.get('/get_wb_content/:wbID', function (req, res, next) { //http://localho
                 message: err
             });
         } else {
-            res.send({
+            
+            var finalResult = ({
                 error: false,
-                message: data
+                message: data[0].result
             });
+            finalResult = finalResult.message.replace(/'/g,'').replace(/\\/g,'');
+            res.send(
+                finalResult
+            );
         }
     });
 });

@@ -210,7 +210,7 @@ create procedure getWhiteboardContent(in idWhiteboard int)
 begin
 	select json_object(
 	'whiteboardID', wb.idWhiteBoard,
-    'whiteboardName', wb.boardDate,
+    'whiteboardName', wb.boardName,
     'whiteboardGroups', ( select
 							cast(
 								concat('[',
@@ -237,7 +237,7 @@ begin
 							) 
 						from groupo as gp
                         where gp.idWhiteBoardFK = wb.idWhiteBoard )
-					) 
+					)  as result
 			from whiteBoard as wb where wb.idWhiteBoard = idWhiteboard;
 end$$
 DELIMITER ;
