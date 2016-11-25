@@ -286,6 +286,11 @@ DELIMITER $$
 USE `collaboard`$$
 create procedure deleteGroup(in inputIdGroup int)
 begin
+DECLARE varQty,varWB int;
+Select idWhiteBoardFK into varWB from groupo where idGroup=inputIdGroup;
+SELECT COUNT(*) into varQty FROM groupo where idWhiteBoardFK=varWB;
+if(varQty>1) then
 	DELETE FROM groupo where idGroup=inputIdGroup;
+    end if;
 end$$
 DELIMITER ;
