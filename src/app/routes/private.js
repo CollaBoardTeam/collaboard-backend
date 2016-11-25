@@ -127,5 +127,56 @@ router.post('/add-group-wb', function (req, res, next) { //http://localhost:3000
     });
 });
 
+//Add new group to whiteboard
+router.put('/change-wb-name', function (req, res, next) { //http://localhost:3000/
+    var result = wrapper.editWhiteboardName(req.body, function(err, data){
+        if(err) {
+            res.json({
+                error: true,
+                message: err
+            });
+        } else {
+            res.json({
+                error: false, 
+                message: data
+            });
+        }
+    });
+});
+
+//Add new group to whiteboard
+router.put('/change-group-name', function (req, res, next) { //http://localhost:3000/
+    var result = wrapper.editGroupName(req.body, function(err, data){
+        if(err) {
+            res.json({
+                error: true,
+                message: err
+            });
+        } else {
+            res.json({
+                error: false, 
+                message: data
+            });
+        }
+    });
+});
+
+
+//Delete sticky note
+router.delete('/delete-group/:groupid', function (req, res, next) { //http://localhost:3000/
+    var result = wrapper.deleteGroup(req.params.groupid, function(err, data){
+        if(err) {
+            res.json({
+                error: true,
+                message: err
+            });
+        } else {
+            res.json({
+                error: false, 
+                message: 'Group deleted!'
+            });
+        }
+    });
+});
 
 module.exports = router;

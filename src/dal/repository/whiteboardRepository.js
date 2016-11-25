@@ -88,6 +88,56 @@ WhiteboardRepository.prototype.addGroup = function(jsonContent, cb){
         }
     });
 }
+
+/**
+ * Method to return a whiteboard content
+ * @param jsonContent - json string with info to save
+ * @param cb - callback to method caller e.g. "function(err, data)"
+ */
+WhiteboardRepository.prototype.editWhiteboardName = function(jsonContent, cb){
+    var values = [ jsonContent.wbid, jsonContent.newname ];
+    connector.performQuery('CALL changewhiteboardname(?,?)', values, function(err, data){
+        if (err){
+            cb(err, null);
+        } else {
+            cb(null, data);
+        }
+    });
+}
+
+/**
+ * Method to return a whiteboard content
+ * @param jsonContent - json string with info to save
+ * @param cb - callback to method caller e.g. "function(err, data)"
+ */
+WhiteboardRepository.prototype.editGroupName = function(jsonContent, cb){
+    var values = [ jsonContent.groupid, jsonContent.newname ];
+    connector.performQuery('CALL changeGroupName(?,?)', values, function(err, data){
+        if (err){
+            cb(err, null);
+        } else {
+            cb(null, data);
+        }
+    });
+}
+
+
+/**
+ * Method to return a whiteboard content
+ * @param jsonContent - json string with info to save
+ * @param cb - callback to method caller e.g. "function(err, data)"
+ */
+WhiteboardRepository.prototype.deleteGroup = function(jsonContent, cb){
+    connector.performQuery('CALL deletegroup(?)', jsonContent, function(err, data){
+        if (err){
+            cb(err, null);
+        } else {
+            cb(null, data);
+        }
+    });
+}
+
+
 /**
  * Exporting a new instantiation of this
  */

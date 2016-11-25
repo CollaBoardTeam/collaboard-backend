@@ -165,6 +165,52 @@ Wrapper.prototype.addGroupToWhiteboard = function(jsonContent, cb){
 }
 
 /**
+ * Calls stickyNoteRepository to delete a sticky note
+ * @param jsonContent - json string with content of sticky note
+ * @param cb - callback to the method caller e.g. "function (err, data)"
+ */
+Wrapper.prototype.editWhiteboardName = function(jsonContent, cb){
+    whiteboardRepo.editWhiteboardName(jsonContent, function(err, data){
+        if (err) {
+            cb(err, null);
+        } else {
+            cb(null, data);
+        }
+    });
+}
+
+
+/**
+ * Calls stickyNoteRepository to delete a sticky note
+ * @param jsonContent - json string with content of sticky note
+ * @param cb - callback to the method caller e.g. "function (err, data)"
+ */
+Wrapper.prototype.editGroupName = function(jsonContent, cb){
+    whiteboardRepo.editGroupName(jsonContent, function(err, data){
+        if (err) {
+            cb(err, null);
+        } else {
+            cb(null, data);
+        }
+    });
+}
+
+/**
+ * Calls stickyNoteRepository to delete a sticky note
+ * @param jsonContent - json string with content of sticky note
+ * @param cb - callback to the method caller e.g. "function (err, data)"
+ */
+Wrapper.prototype.deleteGroup = function(jsonContent, cb){
+    whiteboardRepo.deleteGroup(jsonContent, function(err, data){
+        if (err) {
+            cb(err, null);
+        } else {
+            cb(null, data);
+        }
+    });
+}
+
+/**
  * Exporting a new instantiation of this
  */
 module.exports = new Wrapper();
