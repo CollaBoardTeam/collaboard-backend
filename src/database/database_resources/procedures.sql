@@ -222,14 +222,26 @@ begin
 														concat('[',
 															group_concat(
 																JSON_OBJECT(
-																	'stickyId', st.idSticky, 'stickyColor', color, 'stickyContent', stline.lineContent
+																	'stickyId', st.idSticky, 'stickyColor', color,'groupLines', 
+																	(select
+																		cast(
+																			concat('[',
+																				group_concat(
+																					JSON_OBJECT(
+																						'lineId', lo.idLine,'stickyContent', stline.lineContent,'lineIndex', lo.IndexLine
+																						)
+																					),
+																				']')AS JSON
+																			)
+																		from stickyNoteLine as stline
+																		join `line` as lo on lo.idLine=stline.idLineFK
+																		where stline.idStickyNoteFK=st.idSticky)
 																)
 															),
 														']') AS JSON
 													)
 												from stickyNote as st 
-												join color as c on c.idColor = st.idColorFK
-												left join stickyNoteLine as stline on stline.idStickyNoteFK = st.idSticky
+												join color as c on c.idColor = st.idColorFK 
 												where st.idGroupFK = gp.idGroup )
 										)
 									),
@@ -237,7 +249,7 @@ begin
 							) 
 						from groupo as gp
                         where gp.idWhiteBoardFK = wb.idWhiteBoard )
-					)  as result
+					) 
 			from whiteBoard as wb where wb.idWhiteBoard = idWhiteboard;
 end$$
 DELIMITER ;
