@@ -1,13 +1,12 @@
 /**
  * Module dependencies
  */
-var app = require('express')();
+var app = exports.app = require('express')();
 var http = require('http');
 var logger = require('morgan');
 var path = require('path');
 var bodyParser = require('body-parser');
-
-
+var jwtConfig = require(path.resolve('src/authentication/config'));
 
 /**
  * Server configuration
@@ -29,7 +28,7 @@ app.use(function(req, res, next) {
   res.header("Access-Control-Allow-Headers", "Access-Control-Allow-Headers, Origin,Accept, X-Requested-With, Content-Type, Access-Control-Request-Method, Access-Control-Request-Headers");
   next();
 });
-
+app.set('superSecret', jwtConfig.secret);
 
 // Json body parser
 app.use(bodyParser.json()); // support json encoded bodies
@@ -38,12 +37,6 @@ app.use(bodyParser.urlencoded({ extended: true })); // support encoded bodies
 var index = require('./app/routes/index');
 var public = require('./app/routes/public');
 var private = require('./app/routes/private');
-
-
-// Declare routes endpoints
-app.use('/', index); //http//localhost:3000/
-app.use('/public', public);
-app.use('/private', private);
 
 // Declare routes endpoints
 app.use('/', index); // http://localhost:3000/
@@ -54,10 +47,12 @@ app.use('/private', private); // http://localhost:3000/private/
 require(path.resolve('src/socket.js'));
 require(path.resolve('src/dal/connector/dbConnectorMySQL')).establishConnection();
 
-
 // Need to export close server due to testing
 module.exports = {
     close: function (){
         server.close();
     }
 };
+
+// Authentication
+require('./app/routes/routerSetup')(app).createRoutes(app);
