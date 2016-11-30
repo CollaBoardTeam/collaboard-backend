@@ -39,9 +39,12 @@ var public = require('./app/routes/public');
 var private = require('./app/routes/private');
 
 // Declare routes endpoints
-app.use('/', index); // http://localhost:3000/
-app.use('/public', public); // http://localhost:3000/public/
-app.use('/private', private); // http://localhost:3000/private/
+//app.use('/', index); // http://localhost:3000/
+//app.use('/public', public); // http://localhost:3000/public/
+//app.use('/private', private); // http://localhost:3000/private/
+
+// Middleware Routing with Authentication
+require('./app/routes/routerSetup')(app).createRoutes(app);
 
 // Sockets declaration
 require(path.resolve('src/socket.js'));
@@ -53,6 +56,3 @@ module.exports = {
         server.close();
     }
 };
-
-// Authentication
-require('./app/routes/routerSetup')(app).createRoutes(app);

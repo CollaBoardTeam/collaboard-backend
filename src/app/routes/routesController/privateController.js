@@ -1,14 +1,16 @@
 /**
  * Module dependencies
  */
-var express = require('express');
-var router = express.Router();
-var path = require('path');
-var wrapper = require(path.resolve('src/dal/repository/wrapper'));
 
+var wrapper = require('../../../dal/repository/wrapper');
 
-//Create whiteboard with name
-router.post('/create-wb', function (req, res, next) { //http://localhost:3000/
+function PrivateController() {
+}
+
+/**
+ * Whiteboard functions
+ */
+PrivateController.prototype.createWhiteboard = function (req, res) {
     var result = wrapper.createWhiteboard(req.body, function(err, data){
         if(err) {
             res.json({
@@ -22,78 +24,9 @@ router.post('/create-wb', function (req, res, next) { //http://localhost:3000/
             });
         }
     });
-});
+}
 
-//Create sticky note
-router.post('/create-st', function (req, res, next) { //http://localhost:3000/
-    var result = wrapper.createStickyNote(req.body, function(err, data){
-        if(err) {
-            res.json({
-                error: true,
-                message: err
-            });
-        } else {
-            res.json({
-                error: false,
-                message: data
-            });
-        }
-    });
-});
-
-//Edit sticky note
-router.put('/edit-st', function (req, res, next) { //http://localhost:3000/
-    var result = wrapper.editStickyNote(req.body, function(err, data){
-        if(err) {
-            res.json({
-                error: true,
-                message: err
-            });
-        } else {
-            res.json({
-                error: false,
-                message: data
-            });
-        }
-    });
-});
-
-//Delete sticky note
-router.delete('/delete-st/:stickyID', function (req, res, next) { //http://localhost:3000/
-    var result = wrapper.deleteStickyNote(req.params.stickyID, function(err, data){
-        if(err) {
-            res.json({
-                error: true,
-                message: err
-            });
-        } else {
-            res.json({
-                error: false, 
-                message: 'Sticky Note deleted!'
-            });
-        }
-    });
-});
-
-//Edit sticky note color
-router.put('/edit-st-color', function (req, res, next) { //http://localhost:3000/
-    var result = wrapper.editStickyNoteColor(req.body, function(err, data){
-        if(err) {
-            res.json({
-                error: true,
-                message: err
-            });
-        } else {
-            res.json({
-                error: false,
-                message: data
-            });
-        }
-    });
-});
-
-//Delete whiteboard
-router.delete('/delete-wb/:wbid/:userid', function (req, res, next) { //http://localhost:3000/
+PrivateController.prototype.deleteWhiteboard = function (req, res){
     var result = wrapper.deleteWhiteboard(req, function(err, data){
         if(err) {
             res.json({
@@ -107,27 +40,9 @@ router.delete('/delete-wb/:wbid/:userid', function (req, res, next) { //http://l
             });
         }
     });
-});
+}
 
-//Add new group to whiteboard
-router.post('/add-group-wb', function (req, res, next) { //http://localhost:3000/
-    var result = wrapper.addGroupToWhiteboard(req.body, function(err, data){
-        if(err) {
-            res.json({
-                error: true,
-                message: err
-            });
-        } else {
-            res.json({
-                error: false, 
-                message: data
-            });
-        }
-    });
-});
-
-//Add new group to whiteboard
-router.put('/change-wb-name', function (req, res, next) { //http://localhost:3000/
+PrivateController.prototype.changeWhiteboardName = function (req, res) {
     var result = wrapper.editWhiteboardName(req.body, function(err, data){
         if(err) {
             res.json({
@@ -141,10 +56,95 @@ router.put('/change-wb-name', function (req, res, next) { //http://localhost:300
             });
         }
     });
-});
+}
 
-//Add new group to whiteboard
-router.put('/change-group-name', function (req, res, next) { //http://localhost:3000/
+/**
+ * StickyNote functions
+ */
+PrivateController.prototype.createStickyNote = function (req, res) {
+    var result = wrapper.createStickyNote(req.body, function(err, data){
+        if(err) {
+            res.json({
+                error: true,
+                message: err
+            });
+        } else {
+            res.json({
+                error: false,
+                message: data
+            });
+        }
+    });
+}
+
+PrivateController.prototype.editStickyNote = function (req, res) {
+    var result = wrapper.editStickyNote(req.body, function(err, data){
+        if(err) {
+            res.json({
+                error: true,
+                message: err
+            });
+        } else {
+            res.json({
+                error: false,
+                message: data
+            });
+        }
+    });
+}
+
+PrivateController.prototype.deleteStickyNote = function (req, res) {
+    var result = wrapper.deleteStickyNote(req.params.stickyID, function(err, data){
+        if(err) {
+            res.json({
+                error: true,
+                message: err
+            });
+        } else {
+            res.json({
+                error: false, 
+                message: 'Sticky Note deleted!'
+            });
+        }
+    });
+}
+
+PrivateController.prototype.editStickyNoteColor = function (req, res) {
+    var result = wrapper.editStickyNoteColor(req.body, function(err, data){
+        if(err) {
+            res.json({
+                error: true,
+                message: err
+            });
+        } else {
+            res.json({
+                error: false,
+                message: data
+            });
+        }
+    });
+}
+
+/**
+ * Group functions
+ */
+PrivateController.prototype.addGroupToWhiteboard = function (req, res) {
+    var result = wrapper.addGroupToWhiteboard(req.body, function(err, data){
+        if(err) {
+            res.json({
+                error: true,
+                message: err
+            });
+        } else {
+            res.json({
+                error: false, 
+                message: data
+            });
+        }
+    });
+}
+
+PrivateController.prototype.editGroupName = function (req, res) {
     var result = wrapper.editGroupName(req.body, function(err, data){
         if(err) {
             res.json({
@@ -158,11 +158,9 @@ router.put('/change-group-name', function (req, res, next) { //http://localhost:
             });
         }
     });
-});
+}
 
-
-//Delete sticky note
-router.delete('/delete-group/:groupid', function (req, res, next) { //http://localhost:3000/
+PrivateController.prototype.deleteGroup = function (req, res) {
     var result = wrapper.deleteGroup(req.params.groupid, function(err, data){
         if(err) {
             res.json({
@@ -176,6 +174,9 @@ router.delete('/delete-group/:groupid', function (req, res, next) { //http://loc
             });
         }
     });
-});
+}
 
-module.exports = router;
+/**
+ * Exporting object
+ */
+module.exports = new PrivateController();
