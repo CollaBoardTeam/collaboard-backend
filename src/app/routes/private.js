@@ -26,7 +26,6 @@ router.post('/create-wb', function (req, res, next) { //http://localhost:3000/
 
 //Create sticky note
 router.post('/create-st', function (req, res, next) { //http://localhost:3000/
-// Create sticky note
     var result = wrapper.createStickyNote(req.body, function(err, data){
         if(err) {
             res.json({
@@ -39,8 +38,10 @@ router.post('/create-st', function (req, res, next) { //http://localhost:3000/
                 message: data
             });
         }
-    });
 });
+});
+
+
 
 //Edit sticky note
 router.put('/edit-st', function (req, res, next) { //http://localhost:3000/
@@ -50,7 +51,8 @@ router.put('/edit-st', function (req, res, next) { //http://localhost:3000/
                 error: true,
                 message: err
             });
-        } else {
+        } 
+        else {
             res.json({
                 error: false,
                 message: data

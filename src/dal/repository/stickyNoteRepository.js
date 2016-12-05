@@ -16,15 +16,42 @@ function StickyNoteRepository(){
  * @param cb - callback to method caller e.g. "function(err, data)"
  */
 StickyNoteRepository.prototype.create = function(jsonContent, cb){
-    var values = [jsonContent.userID, jsonContent.content, jsonContent.position, jsonContent.wbGroupID, jsonContent.colorID];
-    connector.performQuery('CALL createStickyNote(?,?,?,?,?)',values, function(err, data){
+        var length = jsonContent.stickylines.length;
+        var stickieslines = jsonContent.stickylines;
+        var values = [jsonContent.userid, stickieslines[0].lineContent, jsonContent.stickypositon, jsonContent.wbGroupID, jsonContent.colorID];
+        var stickyid;
+
+        connector.performQuery('CALL createStickyNote(?,?,?,?,?)',values, function(err, data){
         if (err){
             cb(err, null);
         } else {
-            cb(null, data);
+            stickyid = data;
+            stickyid = JSON.stringify(stickyid);
+            var strStickyID = JSON.parse(stickyid);
+
+            if(length > 1){
+                for (i = 1; i < length; i++) { 
+                    var values2 = [strStickyID[0].idSticky, stickieslines[i].lineContent, stickieslines[i].linePosition];
+                    connector.performQuery('CALL addLineToSticky(?,?,?)',values2, function(err, data){
+                            if (err){
+                                if(i === length - 1){
+                                    cb(err, null);
+                                };
+                            } else {
+                                if(i === length - 1){
+                                    cb(null, data);
+                                };
+                           
+                         }
+                        });
+                }
+            }
+            cb(null,data);
         }
     });
 }
+
+
 
 /**
  * Method to edit a database registry of a sticky note
@@ -32,43 +59,30 @@ StickyNoteRepository.prototype.create = function(jsonContent, cb){
  * @param cb - callback to method caller e.g. "function(err, data)"
  */
 StickyNoteRepository.prototype.edit = function(jsonContent, cb){
-    var values = [ jsonContent.snID, jsonContent.contentLine, jsonContent.lineID];
-    connector.performQuery('CALL editStickyNote(?,?,?)',values, function(err, data){
-        if (err){
-            cb(err, null);
-        } else {
-            cb(null, data);
+
+    var length = jsonContent.stickylines.length;
+    var stickieslines = jsonContent.stickylines;
+    var values = '(';
+
+    for (i = 0; i < length; i++) {
+        if(i === length - 1){
+        values = values +  stickieslines[i].lineID + ',' +  jsonContent.stickyid + ',"' + stickieslines[i].lineContent + '"';
+
+        }else{
+            values = values +  stickieslines[i].lineID + ',' +  jsonContent.stickyid + ',"' + stickieslines[i].lineContent + '"), (';
         }
-    });
-}
+    }
+    values = values + ')';
 
-
-
-/**
- * Method to edit a database registry of a sticky note
- * @param jsonContent - json string with info to save
- * @param cb - callback to method caller e.g. "function(err, data)"
- */
-/*
-StickyNoteRepository.prototype.edit2 = function(jsonContent, cb){
-
-    var jsonString = "{\n\t\"stickyid\": 1,\n\t\"stickypositon\": 2,\n\t\"stickylines\": [{\n\t\t\"lineID\": 1,\n\t\t\"lineContent\": \"ola\",\n\t\t\"linePosition\": 1\n\t}, {\n\t\t\"lineID\": 2,\n\t\t\"lineContent\": \"sdasad\",\n\t\t\"linePosition\": 2\n\t}, {\n\t\t\"lineID\": 3,\n\t\t\"lineContent\": \"odsaadsadsdsadsla\",\n\t\t\"linePosition\": 3\n\t}]\n}";
-    var json = JSON.parse(jsonString);
-    var length = json.stickylines.length;
-    for (i = 0; i < length; i++) { 
-        console.log(json.stickylines[i]);
-        var values = [ json.stickyid, json.stickylines[i].lineID, json.stickylines[i].lineContent ];
-
-        connector.performQuery('CALL editStickyNote(?,?,?)',values, function(err, data){
+    
+    connector.editSticky(values, function(err, data){
             if (err){
                 cb(err, null);
             } else {
                 cb(null, data);
             }
-        });
-    }
+    });
 }
-*/
 
 /**
  * Method to delete a database registry of a sticky note
