@@ -5,13 +5,13 @@ var path = require('path');
 var connector = require(path.resolve('src/dal/connector/dbConnectorMySQL'));
 
 /**
- * Repository to manage all sticky notes operations
+ * Repository to manage other entities (colors)
  */
 function UtilityRepository(){
 }
 
 /**
- * Method to create a database registry of a sticky note
+ * Method to get all avaiable colors
  * @param cb - callback to method caller e.g. "function(err, data)"
  */
 UtilityRepository.prototype.getColors = function(cb){

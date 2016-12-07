@@ -69,7 +69,9 @@ DBConnectorMYSQL.prototype.closeConnection = function(){
 }
 
 
-
+/**
+ * New function to edit sticky. 
+ */
 DBConnectorMYSQL.prototype.editSticky = function(values, cb){
     var query = ' INSERT INTO stickynoteline values' + values + 'ON DUPLICATE KEY UPDATE lineContent=VALUES(lineContent);';
 
