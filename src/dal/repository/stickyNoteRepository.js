@@ -51,8 +51,6 @@ StickyNoteRepository.prototype.create = function(jsonContent, cb){
     });
 }
 
-
-
 /**
  * Method to edit a database registry of a sticky note
  * @param jsonContent - json string with info to save
@@ -100,7 +98,7 @@ StickyNoteRepository.prototype.delete = function(jsonContent, cb){
 }
 
 /**
- * Method to delete a database registry of a sticky note
+ * Method to edit a database registry of a sticky note's color
  * @param jsonContent - json string with info to save
  * @param cb - callback to method caller e.g. "function(err, data)"
  */

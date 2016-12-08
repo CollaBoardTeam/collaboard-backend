@@ -33,6 +33,9 @@ begin
 end$$
 DELIMITER ;
 
+-- *************************************************************
+--  createStickyNote      create a new stickyNote
+-- *************************************************************
 DROP procedure IF EXISTS `createStickyNote`;
 DELIMITER $$
 USE `collaboard`$$
@@ -50,6 +53,9 @@ line on stickyNoteLine.idLineFK=line.idLine where stickyNote.idSticky=varKey;
 end$$
 DELIMITER ;
 
+-- *************************************************************
+--   createGroupWB      create a new whiteBoard group
+-- *************************************************************
 DROP procedure IF EXISTS `createGroupWB`;
 DELIMITER $$
 USE `collaboard`$$
@@ -64,7 +70,7 @@ end$$
 DELIMITER ;
 
 -- *************************************************************
---                      GET PROCEDURES 
+--   whiteBoardContent    get all the content od a whiteBoard
 -- *************************************************************
 
 DROP procedure IF EXISTS `whiteBoardContent`;
@@ -92,6 +98,9 @@ select min(idWhiteBoard) into vartmp from whiteBoard join groupo on whiteBoard.i
 end$$
 DELIMITER ;
 
+-- *************************************************************
+--   whiteBoardByUser    get all whiteBoards from a user
+-- *************************************************************
 USE `collaboard`;
 DROP procedure IF EXISTS `whiteBoardByUser`;
 DELIMITER $$
@@ -111,6 +120,9 @@ begin
 end$$
 DELIMITER ;
 
+-- *************************************************************
+--    getColors     get all the colors available 
+-- *************************************************************
 DROP procedure IF EXISTS `getColors`;
 DELIMITER $$
 USE `collaboard`$$
@@ -121,7 +133,7 @@ end$$
 DELIMITER ;
 
 -- *************************************************************
---                      UPDATE PROCEDURES 
+--   editColorSticky        changes the color of a stickyNote
 -- *************************************************************
 
 DROP procedure IF EXISTS `editColorSticky`;
@@ -135,6 +147,9 @@ begin
 end$$
 DELIMITER ;
 
+-- *************************************************************
+--    editStickyNote         edit an existing StickyNote
+-- *************************************************************
 DROP procedure IF EXISTS `editStickyNote`;
 DELIMITER $$
 USE `collaboard`$$
@@ -151,6 +166,9 @@ begin
 end$$
 DELIMITER ;
 
+-- *************************************************************
+--  changeWBState       Lock ou unlock the WhiteBoard
+-- *************************************************************
 USE `collaboard`;
 DROP procedure IF EXISTS `changeStateWB`;
 DELIMITER $$
@@ -169,7 +187,7 @@ end$$
 DELIMITER ;
 
 -- *************************************************************
---                      DELETE PROCEDURES 
+--   deleteStickyNote       deletes a stickyNote
 -- *************************************************************
 
 DROP procedure IF EXISTS `deleteStickyNote`;
@@ -182,6 +200,9 @@ begin
 end$$
 DELIMITER ;
 
+-- *************************************************************
+--    deleleWhiteBoard          deletes an whiteBoard
+-- *************************************************************
 DROP procedure IF EXISTS `deleteWhiteBoard`;
 DELIMITER $$
 USE `collaboard`$$
@@ -222,14 +243,26 @@ begin
 														concat('[',
 															group_concat(
 																JSON_OBJECT(
-																	'stickyId', st.idSticky, 'stickyColor', color, 'stickyContent', stline.lineContent
+																	'stickyId', st.idSticky, 'stickyColor', color,'groupLines', 
+																	(select
+																		cast(
+																			concat('[',
+																				group_concat(
+																					JSON_OBJECT(
+																						'lineId', lo.idLine,'stickyContent', stline.lineContent,'lineIndex', lo.IndexLine
+																						)
+																					),
+																				']')AS JSON
+																			)
+																		from stickyNoteLine as stline
+																		join `line` as lo on lo.idLine=stline.idLineFK
+																		where stline.idStickyNoteFK=st.idSticky)
 																)
 															),
 														']') AS JSON
 													)
 												from stickyNote as st 
-												join color as c on c.idColor = st.idColorFK
-												left join stickyNoteLine as stline on stline.idStickyNoteFK = st.idSticky
+												join color as c on c.idColor = st.idColorFK 
 												where st.idGroupFK = gp.idGroup )
 										)
 									),
@@ -237,7 +270,7 @@ begin
 							) 
 						from groupo as gp
                         where gp.idWhiteBoardFK = wb.idWhiteBoard )
-					)  as result
+					) as result
 			from whiteBoard as wb where wb.idWhiteBoard = idWhiteboard;
 end$$
 DELIMITER ;
@@ -286,6 +319,28 @@ DELIMITER $$
 USE `collaboard`$$
 create procedure deleteGroup(in inputIdGroup int)
 begin
+DECLARE varQty,varWB int;
+Select idWhiteBoardFK into varWB from groupo where idGroup=inputIdGroup;
+SELECT COUNT(*) into varQty FROM groupo where idWhiteBoardFK=varWB;
+if(varQty>1) then
 	DELETE FROM groupo where idGroup=inputIdGroup;
+    end if;
+end$$
+DELIMITER ;
+
+-- *****************************************************************
+--   addLineToSticky     add new content lines to a sticky note.
+-- *****************************************************************
+DROP procedure IF EXISTS `addLineToSticky`;
+DELIMITER $$
+USE `collaboard`$$
+create procedure addLineToSticky(in inputIdSticky int,in inputContent varchar(255),in inputLineIndex int)
+begin
+    declare varLayout,varLine INT;
+	select distinct idLayoutFK into varLayout from stickyNote  join stickyNoteLine on
+	stickynote.idSticky=stickynoteline.idStickyNoteFK join
+	line on stickynoteline.idLineFK=line.idLine where idSticky=inputIdSticky;
+	select idLine into varLine from line where idLayoutFK=varLayout and indexline=inputLineIndex;
+	insert into stickyNoteLine values(varLine,inputIdSticky,inputContent);
 end$$
 DELIMITER ;
