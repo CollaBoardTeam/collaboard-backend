@@ -215,4 +215,54 @@ router.put('/change-wb-state', function (req, res, next) { //http://localhost:30
     });
 });
 
+// Create a user
+router.post('/create-user', function (req, res, next) {
+    var result = wrapper.createUser(req.body, function (err, data) {
+        if (err) {
+            res.json({
+                error: true,
+                message: err
+            });
+        } else {
+            res.json({
+                error: false,
+                message: data
+            });
+        }
+    });
+});
+
+// Invite user to whiteboard
+router.post('/inv-user', function (req, res, next) {
+    var result = wrapper.inviteUserToWhiteboard(req.body, function (err, data) {
+        if (err) {
+            res.json({
+                error: true,
+                message: err
+            });
+        } else {
+            res.json({
+                error: false,
+                message: data
+            });
+        }
+    });
+});
+
+// Remove user from whiteboard
+router.delete('/rem-user/:userid/:wbid', function (req, res, next) {
+    var result = wrapper.removeUserFromWhiteboard(req.params, function (err, data) {
+        if (err) {
+            res.json({
+                error: true,
+                message: err
+            });
+        } else {
+            res.json({
+                error: false,
+                message: data
+            });
+        }
+    });
+});
 module.exports = router;
