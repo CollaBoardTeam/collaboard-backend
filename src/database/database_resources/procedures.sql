@@ -232,6 +232,7 @@ begin
 	select json_object(
 	'whiteboardID', wb.idWhiteBoard,
     'whiteboardName', wb.boardName,
+    'whiteboardState', wb.locked,
     'whiteboardGroups', ( select
 							cast(
 								concat('[',
