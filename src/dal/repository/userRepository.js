@@ -16,7 +16,7 @@ function UserRepository() { }
  */
 UserRepository.prototype.create = function (jsonContent, cb) {
     var values = [];
-    connect.performQuery('', values, function (err, data) {
+    connector.performQuery('', values, function (err, data) {
         if (err) {
             cb(err, null);
         } else {
@@ -32,7 +32,7 @@ UserRepository.prototype.create = function (jsonContent, cb) {
  */
 UserRepository.prototype.authenticate = function (jsonContent, cb) {
     var values = [];
-    connect.performQuery('', values, function (err, data) {
+    connector.performQuery('', values, function (err, data) {
         if (err) {
             cb(err, null);
         } else {
@@ -47,8 +47,8 @@ UserRepository.prototype.authenticate = function (jsonContent, cb) {
  * @param cb - callback to method caller e.g "function(err, data)"
  */
 UserRepository.prototype.inviteUserToWhiteboard = function (jsonContent, cb) {
-    var values = [];
-    connect.performQuery('', values, function (err, data) {
+    var values = [jsonContent.owner, jsonContent.useremail, jsonContent.wbid];
+    connector.performQuery('CALL inviteUsers(?,?,?);', values, function (err, data) {
         if (err) {
             cb(err, null);
         } else {
@@ -64,7 +64,55 @@ UserRepository.prototype.inviteUserToWhiteboard = function (jsonContent, cb) {
  */
 UserRepository.prototype.removeUserFromWhiteboard = function (jsonContent, cb) {
     var values = [];
-    connect.performQuery('', values, function (err, data) {
+    connector.performQuery('', values, function (err, data) {
+        if (err) {
+            cb(err, null);
+        } else {
+            cb(null, data);
+        }
+    });
+}
+
+/**
+ * Method to check if a user has whiteboard invitations
+ * @param jsonContent - json string with necessary info to connect
+ * @param cb - callback to method caller e.g "function(err, data)"
+ */
+UserRepository.prototype.checkInvitations = function (jsonContent, cb) {
+    var values = [jsonContent.userid];
+    connector.performQuery('CALL checkInvitation(?);', values, function (err, data) {
+        if (err) {
+            cb(err, null);
+        } else {
+            cb(null, data);
+        }
+    });
+}
+
+/**
+ * Method to accept invitation
+ * @param jsonContent - json string with necessary info to connect
+ * @param cb - callback to method caller e.g "function(err, data)"
+ */
+UserRepository.prototype.acceptInvitation = function (jsonContent, cb) {
+    var values = [jsonContent.invid, jsonContent.wbid, jsonContent.userid];
+    connector.performQuery('CALL acceptInvitation(?,?,?);', values, function (err, data) {
+        if (err) {
+            cb(err, null);
+        } else {
+            cb(null, data);
+        }
+    });
+}
+
+/**
+ * Method to decline invitation
+ * @param jsonContent - json string with necessary info to connect
+ * @param cb - callback to method caller e.g "function(err, data)"
+ */
+UserRepository.prototype.declineInvitation = function (jsonContent, cb) {
+    var values = [jsonContent.invid];
+    connector.performQuery('CALL deleteInvitation(?);', values, function (err, data) {
         if (err) {
             cb(err, null);
         } else {
