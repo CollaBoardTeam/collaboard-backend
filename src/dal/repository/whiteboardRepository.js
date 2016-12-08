@@ -28,7 +28,7 @@ WhiteboardRepository.prototype.create = function(jsonContent, cb){
 
 /**
  * Method to return registries of a user's whiteboard
- * @param jsonContent - json string with info
+ * @param jsonContent - json string with user id
  * @param cb - callback to method caller e.g. "function(err, data)"
  */
 WhiteboardRepository.prototype.getWhiteboardByUser = function(userID, cb){
@@ -43,7 +43,7 @@ WhiteboardRepository.prototype.getWhiteboardByUser = function(userID, cb){
 
 /**
  * Method to return a whiteboard content
- * @param jsonContent - json string with info to save
+ * @param jsonContent - json string with whiteboard id
  * @param cb - callback to method caller e.g. "function(err, data)"
  */
 WhiteboardRepository.prototype.getWhiteboardContent = function(wbID, cb){
@@ -57,8 +57,8 @@ WhiteboardRepository.prototype.getWhiteboardContent = function(wbID, cb){
 }
 
 /**
- * Method to return a whiteboard content
- * @param jsonContent - json string with info to save
+ * Method to delete a whiteboard
+ * @param jsonContent - json string with whiteboard id
  * @param cb - callback to method caller e.g. "function(err, data)"
  */
 WhiteboardRepository.prototype.delete = function(jsonContent, cb){
@@ -74,7 +74,7 @@ WhiteboardRepository.prototype.delete = function(jsonContent, cb){
 }
 
 /**
- * Method to return a whiteboard content
+ * Method to add a new group to whiteboard
  * @param jsonContent - json string with info to save
  * @param cb - callback to method caller e.g. "function(err, data)"
  */
@@ -90,8 +90,8 @@ WhiteboardRepository.prototype.addGroup = function(jsonContent, cb){
 }
 
 /**
- * Method to return a whiteboard content
- * @param jsonContent - json string with info to save
+ * Method to change whiteboard name
+ * @param jsonContent - json string with new whiteboard name nad whiteboard id
  * @param cb - callback to method caller e.g. "function(err, data)"
  */
 WhiteboardRepository.prototype.editWhiteboardName = function(jsonContent, cb){
@@ -106,8 +106,8 @@ WhiteboardRepository.prototype.editWhiteboardName = function(jsonContent, cb){
 }
 
 /**
- * Method to return a whiteboard content
- * @param jsonContent - json string with info to save
+ * Method to change group name
+ * @param jsonContent - json string with group id
  * @param cb - callback to method caller e.g. "function(err, data)"
  */
 WhiteboardRepository.prototype.editGroupName = function(jsonContent, cb){
@@ -123,8 +123,8 @@ WhiteboardRepository.prototype.editGroupName = function(jsonContent, cb){
 
 
 /**
- * Method to return a whiteboard content
- * @param jsonContent - json string with info to save
+ * Method to delete a group
+ * @param jsonContent - json string with group id
  * @param cb - callback to method caller e.g. "function(err, data)"
  */
 WhiteboardRepository.prototype.deleteGroup = function(jsonContent, cb){
@@ -136,6 +136,42 @@ WhiteboardRepository.prototype.deleteGroup = function(jsonContent, cb){
         }
     });
 }
+
+
+/**
+ * Method to add a sticky to a group
+ * @param jsonContent - json string with group id and sticky id
+ * @param cb - callback to method caller e.g. "function(err, data)"
+ */
+WhiteboardRepository.prototype.addStickyToGroup = function(jsonContent, cb){
+    var values = [ jsonContent.stickyid , jsonContent.groupid ];
+    connector.performQuery('CALL addStickyNoteToGroup(?,?)', values, function(err, data){
+        if (err){
+            cb(err, null);
+        } else {
+            cb(null, data);
+        }
+    });
+}
+
+
+/**
+ * Method to change whiteboard state to locked
+ * @param jsonContent - json string with whiteboard id
+ * @param cb - callback to method caller e.g. "function(err, data)"
+ */
+WhiteboardRepository.prototype.changeStateWhiteboard = function(jsonContent, cb){
+    values = [jsonContent.wbid];
+    console.log(values);
+    connector.performQuery('CALL changeStateWB(?)', values, function(err, data){
+        if (err){
+            cb(err, null);
+        } else {
+            cb(null, data);
+        }
+    });
+}
+
 
 
 /**

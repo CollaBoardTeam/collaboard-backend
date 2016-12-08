@@ -68,6 +68,22 @@ DBConnectorMYSQL.prototype.closeConnection = function(){
     this.connection.end();
 }
 
+
+/**
+ * New function to edit sticky. 
+ */
+DBConnectorMYSQL.prototype.editSticky = function(values, cb){
+    var query = ' INSERT INTO stickynoteline values' + values + 'ON DUPLICATE KEY UPDATE lineContent=VALUES(lineContent);';
+
+    this.pool.query(query, function(err, rows) {
+        if (err) {
+            cb(err, null);
+        } else
+            cb(null, rows[0]);
+    });
+}
+
+
 /**
  * Exporting a new instantiation of this
  */

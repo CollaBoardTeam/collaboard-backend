@@ -31,7 +31,7 @@ Wrapper.prototype.createStickyNote = function(jsonContent, cb){
 
 /**
  * Calls stickyNoteRepository to edit a sticky note
- * @param jsonContent - json string with content of sticky note
+ * @param jsonContent - json string with the new information of sticky note
  * @param cb - callback to the method caller e.g. "function (err, data)"
  */
 Wrapper.prototype.editStickyNote = function(jsonContent, cb){
@@ -46,7 +46,7 @@ Wrapper.prototype.editStickyNote = function(jsonContent, cb){
 
 /**
  * Calls stickyNoteRepository to delete a sticky note
- * @param jsonContent - json string with content of sticky note
+ * @param jsonContent - json string with sticky note id
  * @param cb - callback to the method caller e.g. "function (err, data)"
  */
 Wrapper.prototype.deleteStickyNote = function(jsonContent, cb){
@@ -76,7 +76,7 @@ Wrapper.prototype.createWhiteboard = function(jsonContent, cb){
 
 /**
  * Calls whiteboardRepository to get whiteboard given a user id
- * @param jsonContent - json string with info
+ * @param jsonContent - json string with user id
  * @param cb - callback to the method caller e.g. "function (err, data)"
  */
 Wrapper.prototype.getWhiteboardsByUser = function(jsonContent, cb){
@@ -91,7 +91,7 @@ Wrapper.prototype.getWhiteboardsByUser = function(jsonContent, cb){
 
 /**
  * Calls whiteboardRepository to get whiteboard content
- * @param jsonContent - json string with info
+ * @param jsonContent - json string with whiteboard id
  * @param cb - callback to the method caller e.g. "function (err, data)"
  */
 Wrapper.prototype.getWhiteboardContent = function(jsonContent, cb){
@@ -105,8 +105,8 @@ Wrapper.prototype.getWhiteboardContent = function(jsonContent, cb){
 }
 
 /**
- * Calls whiteboardRepository to get whiteboard content
- * @param jsonContent - json string with info
+ * Calls whiteboardRepository to get all avaiable colors to sticky
+ * @param jsonContent - empy json object
  * @param cb - callback to the method caller e.g. "function (err, data)"
  */
 Wrapper.prototype.getColors = function(jsonContent, cb){
@@ -135,8 +135,8 @@ Wrapper.prototype.editStickyNoteColor = function(jsonContent, cb){
 }
 
 /**
- * Calls stickyNoteRepository to delete a sticky note
- * @param jsonContent - json string with content of sticky note
+ * Calls stickyNoteRepository to delete a whiteboard
+ * @param jsonContent - json string with sticky note id
  * @param cb - callback to the method caller e.g. "function (err, data)"
  */
 Wrapper.prototype.deleteWhiteboard = function(jsonContent, cb){
@@ -150,8 +150,8 @@ Wrapper.prototype.deleteWhiteboard = function(jsonContent, cb){
 }
 
 /**
- * Calls stickyNoteRepository to delete a sticky note
- * @param jsonContent - json string with content of sticky note
+ * Calls stickyNoteRepository to add a group to whiteboard
+ * @param jsonContent - json string with content of group and whiteboard id
  * @param cb - callback to the method caller e.g. "function (err, data)"
  */
 Wrapper.prototype.addGroupToWhiteboard = function(jsonContent, cb){
@@ -181,8 +181,8 @@ Wrapper.prototype.editWhiteboardName = function(jsonContent, cb){
 
 
 /**
- * Calls stickyNoteRepository to delete a sticky note
- * @param jsonContent - json string with content of sticky note
+ * Calls stickyNoteRepository to change group name
+ * @param jsonContent - json string with content of group id
  * @param cb - callback to the method caller e.g. "function (err, data)"
  */
 Wrapper.prototype.editGroupName = function(jsonContent, cb){
@@ -196,8 +196,8 @@ Wrapper.prototype.editGroupName = function(jsonContent, cb){
 }
 
 /**
- * Calls stickyNoteRepository to delete a sticky note
- * @param jsonContent - json string with content of sticky note
+ * Calls stickyNoteRepository to delete a group
+ * @param jsonContent - json string with content of group id
  * @param cb - callback to the method caller e.g. "function (err, data)"
  */
 Wrapper.prototype.deleteGroup = function(jsonContent, cb){
@@ -209,6 +209,37 @@ Wrapper.prototype.deleteGroup = function(jsonContent, cb){
         }
     });
 }
+
+/**
+ * Calls whiteboardRepository to add a sticky to group
+ * @param jsonContent - json string with content of group id and sticky id
+ * @param cb - callback to the method caller e.g. "function (err, data)"
+ */
+Wrapper.prototype.addStickyToGroup = function(jsonContent, cb){
+    whiteboardRepo.addStickyToGroup(jsonContent, function(err, data){
+        if (err) {
+            cb(err, null);
+        } else {
+            cb(null, data);
+        }
+    });
+}
+
+/**
+ * Calls whiteboardRepository to add a sticky to group
+ * @param jsonContent - json string with content of group id and sticky id
+ * @param cb - callback to the method caller e.g. "function (err, data)"
+ */
+Wrapper.prototype.changeStateWhiteboard = function(jsonContent, cb){
+    whiteboardRepo.changeStateWhiteboard(jsonContent, function(err, data){
+        if (err) {
+            cb(err, null);
+        } else {
+            cb(null, data);
+        }
+    });
+}
+
 
 /**
  * Exporting a new instantiation of this

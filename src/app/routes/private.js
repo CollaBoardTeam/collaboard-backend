@@ -26,7 +26,6 @@ router.post('/create-wb', function (req, res, next) { //http://localhost:3000/
 
 //Create sticky note
 router.post('/create-st', function (req, res, next) { //http://localhost:3000/
-// Create sticky note
     var result = wrapper.createStickyNote(req.body, function(err, data){
         if(err) {
             res.json({
@@ -39,8 +38,10 @@ router.post('/create-st', function (req, res, next) { //http://localhost:3000/
                 message: data
             });
         }
-    });
 });
+});
+
+
 
 //Edit sticky note
 router.put('/edit-st', function (req, res, next) { //http://localhost:3000/
@@ -50,7 +51,8 @@ router.put('/edit-st', function (req, res, next) { //http://localhost:3000/
                 error: true,
                 message: err
             });
-        } else {
+        } 
+        else {
             res.json({
                 error: false,
                 message: data
@@ -174,6 +176,40 @@ router.delete('/delete-group/:groupid', function (req, res, next) { //http://loc
             res.json({
                 error: false, 
                 message: 'Group deleted!'
+            });
+        }
+    });
+});
+
+//Add sticky to a group
+router.put('/add-sticky-toGroup', function (req, res, next) { //http://localhost:3000/
+    var result = wrapper.addStickyToGroup(req.body, function(err, data){
+        if(err) {
+            res.json({
+                error: true,
+                message: err
+            });
+        } else {
+            res.json({
+                error: false, 
+                message: data
+            });
+        }
+    });
+});
+
+//Change wb's state
+router.put('/change-wb-state', function (req, res, next) { //http://localhost:3000/
+    var result = wrapper.changeStateWhiteboard(req.body, function(err, data){
+        if(err) {
+            res.json({
+                error: true,
+                message: err
+            });
+        } else {
+            res.json({
+                error: false, 
+                message: data
             });
         }
     });
