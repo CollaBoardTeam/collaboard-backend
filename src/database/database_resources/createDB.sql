@@ -75,3 +75,9 @@ CREATE TABLE IF NOT EXISTS stickyNoteLine(idLineFK INT NOT NULL,
 			ON DELETE CASCADE, 
         FOREIGN KEY (idStickyNoteFK) REFERENCES stickyNote(idSticky)
 			ON DELETE CASCADE);
+
+create table IF NOT EXISTS invites(idinvite integer auto_increment primary key,
+		idWhiteBoard integer not null,
+		idOwnerWB integer not null,
+		idUserInvited integer not null,
+		sendDate timestamp)

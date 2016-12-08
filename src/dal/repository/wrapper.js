@@ -100,6 +100,8 @@ Wrapper.prototype.createWhiteboard = function(jsonContent, cb){
 /**
  * Calls whiteboardRepository to get whiteboard given a user id
  * @param jsonContent - json string with user id
+ * Calls whiteboardRepository to get all avaiable colors to sticky
+ * @param jsonContent - empty json object
  * @param cb - callback to the method caller e.g. "function (err, data)"
  */
 Wrapper.prototype.getWhiteboardsByUser = function(jsonContent, cb){
@@ -264,6 +266,13 @@ Wrapper.prototype.getColors = function(jsonContent, cb){
  */
 Wrapper.prototype.createUser = function (jsonContent, cb) {
     userRepo.create(jsonContent, function (err, data) {
+/**
+ * Calls whiteboardRepository to get all avaiable colors to sticky
+ * @param jsonContent - empy json object
+ * @param cb - callback to the method caller e.g. "function (err, data)"
+ */
+Wrapper.prototype.getLayouts = function(jsonContent, cb){
+    utilityRepo.getLayouts(jsonContent, function(err, data){
         if (err) {
             cb(err, null);
         } else {
@@ -279,6 +288,12 @@ Wrapper.prototype.createUser = function (jsonContent, cb) {
  */
 Wrapper.prototype.authenticateUser = function (jsonContent, cb) {
     userRepo.authenticate(jsonContent, function (err, data) {
+ * Calls whiteboardRepository to add a sticky to group
+ * @param jsonContent - json string with content of group id and sticky id
+ * @param cb - callback to the method caller e.g. "function (err, data)"
+ */
+Wrapper.prototype.setWhiteboardLayout = function(jsonContent, cb){
+    whiteboardRepo.setLayout(jsonContent, function(err, data){
         if (err) {
             cb(err, null);
         } else {
@@ -294,6 +309,12 @@ Wrapper.prototype.authenticateUser = function (jsonContent, cb) {
  */
 Wrapper.prototype.inviteUserToWhiteboard = function (jsonContent, cb) {
     userRepo.inviteUserToWhiteboard(jsonContent, function (err, data) {
+ * Calls whiteboardRepository to add a sticky to group
+ * @param jsonContent - json string with content of group id and sticky id
+ * @param cb - callback to the method caller e.g. "function (err, data)"
+ */
+Wrapper.prototype.createLayoutWhiteboard = function(jsonContent, cb){
+    whiteboardRepo.createNewLayoutToWhiteboard(jsonContent, function(err, data){
         if (err) {
             cb(err, null);
         } else {

@@ -219,6 +219,10 @@ router.put('/change-wb-state', function (req, res, next) { //http://localhost:30
 router.post('/create-user', function (req, res, next) {
     var result = wrapper.createUser(req.body, function (err, data) {
         if (err) {
+//Change wb's state
+router.put('/set-wb-layout', function (req, res, next) { //http://localhost:3000/
+    var result = wrapper.setWhiteboardLayout(req.body, function(err, data){
+        if(err) {
             res.json({
                 error: true,
                 message: err
@@ -236,6 +240,10 @@ router.post('/create-user', function (req, res, next) {
 router.post('/inv-user', function (req, res, next) {
     var result = wrapper.inviteUserToWhiteboard(req.body, function (err, data) {
         if (err) {
+//Change wb's state
+router.post('/create-wb-layout', function (req, res, next) { //http://localhost:3000/
+    var result = wrapper.createLayoutWhiteboard(req.body, function(err, data){
+        if(err) {
             res.json({
                 error: true,
                 message: err
