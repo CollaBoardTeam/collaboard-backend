@@ -19,3 +19,5 @@ insert into color values(null,'FFA726');
 
 insert into stickyNote values(null,1,'2016-11-16',1,1,2);
 insert into stickyNoteLine values(1,1,'Sample inside StickyNote');
+
+alter table line add lineLegend varchar(50) after indexLine;

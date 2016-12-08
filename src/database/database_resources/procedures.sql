@@ -344,3 +344,43 @@ begin
 	insert into stickyNoteLine values(varLine,inputIdSticky,inputContent);
 end$$
 DELIMITER ;
+
+-- *****************************************************************
+--   getLayouts    get all the IdLayouts and number of lines
+-- *****************************************************************
+DROP procedure IF EXISTS `getLayouts`;
+DELIMITER $$
+USE `collaboard`$$
+create procedure getLayouts()
+begin
+    select count(idLayout) as linhas,layout.idLayout   from layout join line on layout.idLayout=line.idLayoutFK group by layout.idLayout;
+end$$
+DELIMITER ;
+
+-- *****************************************************************
+--   setLayoutWB   set the layout for the whiteboard
+-- *****************************************************************
+DROP procedure IF EXISTS `setLayoutWB`;
+DELIMITER $$
+USE `collaboard`$$
+create procedure setLayoutWB(in inputIdLayout INT, in inputIdWB int)
+begin
+ UPDATE whiteboard SET whiteBoard.idLayoutFK=inputIdLayout where whiteBoard.idWhiteBoard=inputIdWB;
+end$$
+DELIMITER ;
+
+-- *****************************************************************
+--   createLayoutWB  
+-- *****************************************************************
+DROP procedure IF EXISTS `createLayoutWB`;
+DELIMITER $$
+USE `collaboard`$$
+create procedure createLayoutWB(in inputIdWB INT,in inputlayoutName varchar(100))
+begin
+DECLARE varLayout INT;
+ insert into layout values(null,inputlayoutName);
+ select last_insert_id() into varLayout;
+ UPDATE whiteboard SET whiteBoard.idLayoutFK=varLayout where whiteBoard.idWhiteBoard=inputIdWB;
+ select idLayout from layout where layout.idLayout=varLayout;
+end$$
+DELIMITER ;
