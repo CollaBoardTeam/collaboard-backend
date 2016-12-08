@@ -226,6 +226,22 @@ Wrapper.prototype.addStickyToGroup = function(jsonContent, cb){
 }
 
 /**
+ * Calls whiteboardRepository to add a sticky to group
+ * @param jsonContent - json string with content of group id and sticky id
+ * @param cb - callback to the method caller e.g. "function (err, data)"
+ */
+Wrapper.prototype.changeStateWhiteboard = function(jsonContent, cb){
+    whiteboardRepo.changeStateWhiteboard(jsonContent, function(err, data){
+        if (err) {
+            cb(err, null);
+        } else {
+            cb(null, data);
+        }
+    });
+}
+
+
+/**
  * Exporting a new instantiation of this
  */
 module.exports = new Wrapper();

@@ -198,4 +198,21 @@ router.put('/add-sticky-toGroup', function (req, res, next) { //http://localhost
     });
 });
 
+//Change wb's state
+router.put('/change-wb-state', function (req, res, next) { //http://localhost:3000/
+    var result = wrapper.changeStateWhiteboard(req.body, function(err, data){
+        if(err) {
+            res.json({
+                error: true,
+                message: err
+            });
+        } else {
+            res.json({
+                error: false, 
+                message: data
+            });
+        }
+    });
+});
+
 module.exports = router;

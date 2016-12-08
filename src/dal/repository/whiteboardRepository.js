@@ -154,6 +154,26 @@ WhiteboardRepository.prototype.addStickyToGroup = function(jsonContent, cb){
     });
 }
 
+
+/**
+ * Method to change whiteboard state to locked
+ * @param jsonContent - json string with whiteboard id
+ * @param cb - callback to method caller e.g. "function(err, data)"
+ */
+WhiteboardRepository.prototype.changeStateWhiteboard = function(jsonContent, cb){
+    values = [jsonContent.wbid];
+    console.log(values);
+    connector.performQuery('CALL changeStateWB(?)', values, function(err, data){
+        if (err){
+            cb(err, null);
+        } else {
+            cb(null, data);
+        }
+    });
+}
+
+
+
 /**
  * Exporting a new instantiation of this
  */
