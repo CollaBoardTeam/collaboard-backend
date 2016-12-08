@@ -354,7 +354,7 @@ DELIMITER $$
 USE `collaboard`$$
 create procedure getLayouts()
 begin
-    select count(idLayout) as linhas,layout.idLayout   from layout join line on layout.idLayout=line.idLayoutFK group by layout.idLayout;
+    select count(idLayout) as linhas,layout.idLayout,layout.layoutName     from layout join line on layout.idLayout=line.idLayoutFK group by layout.idLayout;
 end$$
 DELIMITER ;
 
