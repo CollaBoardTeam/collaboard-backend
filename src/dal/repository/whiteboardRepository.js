@@ -172,6 +172,86 @@ WhiteboardRepository.prototype.changeStateWhiteboard = function(jsonContent, cb)
     });
 }
 
+/**
+ * Method to set a layout to a whiteboard
+ * @param jsonContent - json string with whiteboard id and layout id
+ * @param cb - callback to method caller e.g. "function(err, data)"
+ */
+WhiteboardRepository.prototype.setLayout = function(jsonContent, cb){
+    values = [ jsonContent.layoutid, jsonContent.wbid ];
+    connector.performQuery('CALL setLayoutWB(?,?)', values, function(err, data){
+        if (err){
+            cb(err, null);
+        } else {
+            cb(null, data);
+        }
+    });
+}
+
+/**
+ * Method to create a new layout to a whiteboard
+ * @param jsonContent - json string with whiteboard id and layout id
+ * @param cb - callback to method caller e.g. "function(err, data)"
+ */
+WhiteboardRepository.prototype.createNewLayoutToWhiteboard = function(jsonContent, cb){
+    values = [ jsonContent.wdid, jsonContent.layoutname ];
+    connector.performQuery('CALL createLayoutWB(?,?)', values, function(err, data){
+        if (err){
+            cb(err, null);
+        } else {
+            //Ineer callback
+            /*
+            //input: 
+                    {
+                    "layoutname": "layoutName",
+                    "wbid": 2,
+                    "subtitles": [{
+                        "lineIndex": 1,
+                        "subtitle": "subtitle1"
+                    }, {
+                        "lineIndex": 2,
+                        "subtitle": "subtitle2"
+                    }]
+                    }
+            */
+           
+            var layoutid = data;
+            layoutid = JSON.stringify(layoutid);
+            var strLayoutID = JSON.parse(layoutid);
+
+            
+            var length = jsonContent.subtitles.length;
+            var subtitles = jsonContent.subtitles;
+            var values = '(';
+
+            //(null,5,1,"legenda lina 1")
+
+            for (i = 0; i < length; i++) {
+                if(i === length - 1){
+                values = values + 'null,' +  strLayoutID[0].idLayout + ',' + subtitles[i].lineIndex + ',"' + subtitles[i].subtitle + '"';
+
+                }else{
+                    values = values + 'null,' +  strLayoutID[0].idLayout + ',' + subtitles[i].lineIndex + ',"' + subtitles[i].subtitle + '"), (';
+                }
+            }
+            values = values + ')';
+
+            
+            connector.addSubtitleToLayout(values, function(err, data){
+                /*
+                if (err){
+                    cb(err, null);
+                } else {
+                    cb(null, data);
+                }
+                */
+            });
+
+            cb(null, data);
+
+        }
+    });
+}
 
 
 /**

@@ -12,7 +12,6 @@ var bodyParser = require('body-parser');
 /**
  * Server configuration
  */
-var port = 3000;
 var port = process.env.PORT || 3000;
 var server = exports.server = http.createServer(app).listen(port, function () {
     console.log('Magic happening at port', port);
