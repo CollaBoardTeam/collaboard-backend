@@ -385,3 +385,65 @@ DECLARE varLayout INT;
  select idLayout from layout where layout.idLayout=varLayout;
 end$$
 DELIMITER ;
+
+-- *****************************************************************
+--   invite user  
+-- *****************************************************************
+DROP procedure IF EXISTS `inviteUsers`;
+DELIMITER $$
+USE `collaboard`$$
+create procedure inviteUsers(in inputIdOwner INT,in inputEmail varchar(100),in inputIdWhiteBoard INT)
+begin
+    DECLARE varUser,varOwner,varLast INT;
+    select idUser into varUser from user where email=inputEmail;
+    select idUserFK into varOwner from whiteboard join userwhiteboard 
+    on whiteboard.idWhiteBoard=userwhiteboard.idWhiteBoardFK join role 
+    on userwhiteboard.idRollFK=role.idRole 
+    where role.description='owner' and whiteBoard.idWhiteBoard=inputIdWhiteBoard;
+    if (varOwner=inputIdOwner and varUser is not null) then
+    insert into invites values(null,inputIdWhiteBoard,varOwner,varUser,null);
+    end if;
+end$$
+DELIMITER ;
+
+-- *****************************************************************
+--   check invitation  
+-- *****************************************************************
+DROP procedure IF EXISTS `checkInvitation`;
+DELIMITER $$
+USE `collaboard`$$
+create procedure checkInvitation(in inputIdUser INT)
+begin
+    select idinvite,invites.idWhiteBoard,idOwnerWB,idUserInvited,sendDate,boardName from invites join whiteBoard on
+    invites.idWhiteBoard=whiteboard.idWhiteBoard where idUserInvited=inputIdUser;
+end$$
+DELIMITER ;
+
+-- *****************************************************************
+--   accept invitation
+-- *****************************************************************
+DROP procedure IF EXISTS `acceptInvitation`;
+DELIMITER $$
+USE `collaboard`$$
+create procedure acceptInvitation(in inputIdInvit INT,in inputIdWhiteBoard INT,in inputIdUser INT)
+begin
+declare varCount INT;
+select count(idUserFK) into varCount  from userwhiteboard where userwhiteboard.idUserFK=inputIdUser and userwhiteboard.idWhiteBoardFK=inputIdWhiteBoard ;
+    DELETE FROM invites where idinvite=inputIdInvit;
+    if(varCount=0)then
+    INSERT INTO userWhiteBoard values(inputIdWhiteBoard,inputIdUser,1);
+    end if;
+end$$
+DELIMITER ;
+
+-- *****************************************************************
+--   delete invitation
+-- *****************************************************************
+DROP procedure IF EXISTS `deleteInvitation`;
+DELIMITER $$
+USE `collaboard`$$
+create procedure deleteInvitation(in inputIdInvit INT)
+begin
+    DELETE FROM invites where idinvite=inputIdInvit;
+end$$
+DELIMITER ;
