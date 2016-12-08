@@ -447,3 +447,28 @@ begin
     DELETE FROM invites where idinvite=inputIdInvit;
 end$$
 DELIMITER ;
+
+-- *****************************************************************
+--   removeUser from WhiteBoard
+-- *****************************************************************
+DROP procedure IF EXISTS `removeUserWB`;
+DELIMITER $$
+USE `collaboard`$$
+create procedure removeUserWB(in inputIdWB INT,in inputIdUser INT)
+begin
+    DELETE FROM userWhiteBoard where idWhiteBoardFK=inputIdWB and idUserFK=inputIdUser;
+end$$
+DELIMITER ;
+
+-- *****************************************************************
+--   get all user from a white board
+-- *****************************************************************
+DROP procedure IF EXISTS `getUsersWB`;
+DELIMITER $$
+USE `collaboard`$$
+create procedure getUsersWB(in inputIdWB INT)
+begin
+    select idWhiteBoard,boardName,idUser,email,idRollFK from whiteboard join userwhiteboard on whiteboard.idWhiteBoard=userwhiteboard.idWhiteBoardFK join user on userwhiteboard.idUserFK=user.IdUser
+    where idWhiteBoardFK=inputIdWB;
+end$$
+DELIMITER ;
