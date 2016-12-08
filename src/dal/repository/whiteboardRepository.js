@@ -139,6 +139,22 @@ WhiteboardRepository.prototype.deleteGroup = function(jsonContent, cb){
 
 
 /**
+ * Method to add a sticky to a group
+ * @param jsonContent - json string with group id and sticky id
+ * @param cb - callback to method caller e.g. "function(err, data)"
+ */
+WhiteboardRepository.prototype.addStickyToGroup = function(jsonContent, cb){
+    var values = [ jsonContent.stickyid , jsonContent.groupid ];
+    connector.performQuery('CALL addStickyNoteToGroup(?,?)', values, function(err, data){
+        if (err){
+            cb(err, null);
+        } else {
+            cb(null, data);
+        }
+    });
+}
+
+/**
  * Exporting a new instantiation of this
  */
 module.exports = new WhiteboardRepository();

@@ -181,4 +181,21 @@ router.delete('/delete-group/:groupid', function (req, res, next) { //http://loc
     });
 });
 
+//Add sticky to a group
+router.put('/add-sticky-toGroup', function (req, res, next) { //http://localhost:3000/
+    var result = wrapper.addStickyToGroup(req.body, function(err, data){
+        if(err) {
+            res.json({
+                error: true,
+                message: err
+            });
+        } else {
+            res.json({
+                error: false, 
+                message: data
+            });
+        }
+    });
+});
+
 module.exports = router;
