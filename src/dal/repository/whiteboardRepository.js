@@ -233,8 +233,9 @@ WhiteboardRepository.prototype.createNewLayoutToWhiteboard = function(jsonConten
  * @param cb - callback to method caller e.g. "function(err, data)"
  */
 WhiteboardRepository.prototype.getWhiteboardUsers = function(jsonContent, cb){
-    values = [jsonContent.wbid];
-    connector.performQuery('', values, function(err, data){
+    var wbid = parseInt(jsonContent.wbid);
+    console.log(wbid);
+    connector.performQuery('call getUsersWB(?);', wbid, function(err, data){
         if (err){
             cb(err, null);
         } else {

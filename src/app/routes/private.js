@@ -287,7 +287,8 @@ router.post('/inv-user', function (req, res, next) {
 
 // Remove user from whiteboard
 // Not compeleted
-router.delete('/rem-user/:userid/:wbid', function (req, res, next) {
+router.delete('/rem-user-wb/:userid/:wbid', function (req, res, next) {
+    console.log('private');
     var result = wrapper.removeUserFromWhiteboard(req.params, function (err, data) {
         if (err) {
             res.json({
@@ -355,7 +356,39 @@ router.delete('/decline-inv/:invid', function (req, res, next) {
     });
 });
 
-// Get users
-// Remove users
+
+// Get Whiteboard's Users
+router.get('/get-wb-users/:wbid', function (req, res, next) {
+    var result = wrapper.getWhiteboardUsers(req.params, function (err, data) {
+        if (err) {
+            res.json({
+                error: true,
+                message: err
+            });
+        } else {
+            res.json({
+                error: false,
+                message: data
+            });
+        }
+    });
+});
+
+// Remove user from whiteboard
+router.delete('/remove-user-wb/:wbid/:userid', function (req, res, next) {
+    var result = wrapper.removeUserFromWhiteboard(req.params, function (err, data) {
+        if (err) {
+            res.json({
+                error: true,
+                message: err
+            });
+        } else {
+            res.json({
+                error: false,
+                message: data
+            });
+        }
+    });
+});
 
 module.exports = router;

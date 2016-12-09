@@ -63,8 +63,8 @@ UserRepository.prototype.inviteUserToWhiteboard = function (jsonContent, cb) {
  * @param cb - callback to method caller e.g "function(err, data)"
  */
 UserRepository.prototype.removeUserFromWhiteboard = function (jsonContent, cb) {
-    var values = [];
-    connector.performQuery('', values, function (err, data) {
+    var values = [ jsonContent.wbid , jsonContent.userid ];
+    connector.performQuery('CALL removeUserWB(?,?)', values, function (err, data) {
         if (err) {
             cb(err, null);
         } else {
@@ -120,6 +120,7 @@ UserRepository.prototype.declineInvitation = function (jsonContent, cb) {
         }
     });
 }
+
 
 /**
  * Exporting an instantiation of this

@@ -269,7 +269,7 @@ Wrapper.prototype.createLayoutWhiteboard = function(jsonContent, cb){
  * @param jsonContent - json string with whiteboard id
  * @param cb - callback to the method caller e.g. "function (err, data)"
  */
-/*Wrapper.prototype.getWhiteboardUsers = function(jsonContent, cb){
+Wrapper.prototype.getWhiteboardUsers = function(jsonContent, cb){
     whiteboardRepo.getWhiteboardUsers(jsonContent, function(err, data){
         if (err) {
             cb(err, null);
@@ -277,7 +277,7 @@ Wrapper.prototype.createLayoutWhiteboard = function(jsonContent, cb){
             cb(null, data);
         }
     });
-}*/
+}
 
 //###############################################################//
 //###################       UTILS        ########################//
@@ -422,6 +422,20 @@ Wrapper.prototype.declineInvitation = function (jsonContent, cb) {
     });
 }
 
+/**
+ * Method to decline invitation
+ * @param jsonContent - json string with invitation id
+ * @param cb - callback to method caller e.g "function(err, data)"
+ */
+Wrapper.prototype.getWhiteboardUsers = function (jsonContent, cb) {
+    whiteboardRepo.getWhiteboardUsers(jsonContent, function (err, data) {
+        if (err) {
+            cb(err, null);
+        } else {
+            cb(null, data);
+        }
+    });
+}
 
 /**
  * Exporting a new instantiation of this
