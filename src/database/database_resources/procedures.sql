@@ -394,15 +394,18 @@ DELIMITER $$
 USE `collaboard`$$
 create procedure inviteUsers(in inputIdOwner INT,in inputEmail varchar(100),in inputIdWhiteBoard INT)
 begin
-    DECLARE varUser,varOwner,varLast INT;
+    DECLARE varUser,varOwner,varLast,varExistInvitation INT;
     select idUser into varUser from user where email=inputEmail;
     select idUserFK into varOwner from whiteboard join userwhiteboard 
     on whiteboard.idWhiteBoard=userwhiteboard.idWhiteBoardFK join role 
     on userwhiteboard.idRollFK=role.idRole 
     where role.description='owner' and whiteBoard.idWhiteBoard=inputIdWhiteBoard;
-    if (varOwner=inputIdOwner and varUser is not null) then
-    insert into invites values(null,inputIdWhiteBoard,varOwner,varUser,null);
-    end if;
+    select count(idinvite) into varExistInvitation  from invites where idWhiteBoard=inputIdWhiteBoard and idUserInvited=varUser;
+    if(varExistInvitation =0) then
+		if (varOwner=inputIdOwner and varUser is not null) then
+		insert into invites values(null,inputIdWhiteBoard,varOwner,varUser,null);
+		end if;
+	end if;
 end$$
 DELIMITER ;
 
@@ -428,7 +431,8 @@ USE `collaboard`$$
 create procedure acceptInvitation(in inputIdInvit INT,in inputIdWhiteBoard INT,in inputIdUser INT)
 begin
 declare varCount INT;
-select count(idUserFK) into varCount  from userwhiteboard where userwhiteboard.idUserFK=inputIdUser and userwhiteboard.idWhiteBoardFK=inputIdWhiteBoard ;
+select count(idUserFK) into varCount  from userwhiteboard where userwhiteboard.idUserFK=inputIdUser 
+and userwhiteboard.idWhiteBoardFK=inputIdWhiteBoard ;
     DELETE FROM invites where idinvite=inputIdInvit;
     if(varCount=0)then
     INSERT INTO userWhiteBoard values(inputIdWhiteBoard,inputIdUser,1);
@@ -468,7 +472,28 @@ DELIMITER $$
 USE `collaboard`$$
 create procedure getUsersWB(in inputIdWB INT)
 begin
-    select idWhiteBoard,boardName,idUser,email,idRollFK from whiteboard join userwhiteboard on whiteboard.idWhiteBoard=userwhiteboard.idWhiteBoardFK join user on userwhiteboard.idUserFK=user.IdUser
+    select idWhiteBoard,boardName,idUser,email,idRollFK from whiteboard 
+    join userwhiteboard on whiteboard.idWhiteBoard=userwhiteboard.idWhiteBoardFK 
+    join user on userwhiteboard.idUserFK=user.IdUser
     where idWhiteBoardFK=inputIdWB;
+end$$
+DELIMITER ;
+
+-- *****************************************************************
+--   register a new user
+-- *****************************************************************
+DROP procedure IF EXISTS `registerUser`;
+DELIMITER $$
+USE `collaboard`$$
+create procedure registerUser(in inputFullName varchar(255),in inputEmail varchar(100),in inputPassword varchar(25))
+begin
+    DECLARE varEmail,varLast INT;
+    set varLast=null;
+    select idUser into varEmail from user where email=inputEmail;
+    if(varEmail is null) then
+    insert into user values(null,inputFullName,inputEmail,inputPassword);
+    select max(last_insert_id()) into varLast;
+    select * from user where idUser=varLast;
+    end if;
 end$$
 DELIMITER ;
