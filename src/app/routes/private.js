@@ -8,7 +8,7 @@ var wrapper = require(path.resolve('src/dal/repository/wrapper'));
 
 
 //Create whiteboard with name
-router.post('/create-wb', function (req, res, next) { //http://localhost:3000/
+router.post('/create-wb', function (req, res, next) { 
     var result = wrapper.createWhiteboard(req.body, function(err, data){
         if(err) {
             res.json({
@@ -25,7 +25,7 @@ router.post('/create-wb', function (req, res, next) { //http://localhost:3000/
 });
 
 //Create sticky note
-router.post('/create-st', function (req, res, next) { //http://localhost:3000/
+router.post('/create-st', function (req, res, next) { 
     var result = wrapper.createStickyNote(req.body, function(err, data){
         if(err) {
             res.json({
@@ -44,7 +44,7 @@ router.post('/create-st', function (req, res, next) { //http://localhost:3000/
 
 
 //Edit sticky note
-router.put('/edit-st', function (req, res, next) { //http://localhost:3000/
+router.put('/edit-st', function (req, res, next) { 
     var result = wrapper.editStickyNote(req.body, function(err, data){
         if(err) {
             res.json({
@@ -62,7 +62,7 @@ router.put('/edit-st', function (req, res, next) { //http://localhost:3000/
 });
 
 //Delete sticky note
-router.delete('/delete-st/:stickyID', function (req, res, next) { //http://localhost:3000/
+router.delete('/delete-st/:stickyID', function (req, res, next) { 
     var result = wrapper.deleteStickyNote(req.params.stickyID, function(err, data){
         if(err) {
             res.json({
@@ -79,7 +79,7 @@ router.delete('/delete-st/:stickyID', function (req, res, next) { //http://local
 });
 
 //Edit sticky note color
-router.put('/edit-st-color', function (req, res, next) { //http://localhost:3000/
+router.put('/edit-st-color', function (req, res, next) { 
     var result = wrapper.editStickyNoteColor(req.body, function(err, data){
         if(err) {
             res.json({
@@ -96,7 +96,7 @@ router.put('/edit-st-color', function (req, res, next) { //http://localhost:3000
 });
 
 //Delete whiteboard
-router.delete('/delete-wb/:wbid/:userid', function (req, res, next) { //http://localhost:3000/
+router.delete('/delete-wb/:wbid/:userid', function (req, res, next) { 
     var result = wrapper.deleteWhiteboard(req, function(err, data){
         if(err) {
             res.json({
@@ -113,7 +113,7 @@ router.delete('/delete-wb/:wbid/:userid', function (req, res, next) { //http://l
 });
 
 //Add new group to whiteboard
-router.post('/add-group-wb', function (req, res, next) { //http://localhost:3000/
+router.post('/add-group-wb', function (req, res, next) { 
     var result = wrapper.addGroupToWhiteboard(req.body, function(err, data){
         if(err) {
             res.json({
@@ -130,7 +130,7 @@ router.post('/add-group-wb', function (req, res, next) { //http://localhost:3000
 });
 
 //Add new group to whiteboard
-router.put('/change-wb-name', function (req, res, next) { //http://localhost:3000/
+router.put('/change-wb-name', function (req, res, next) { 
     var result = wrapper.editWhiteboardName(req.body, function(err, data){
         if(err) {
             res.json({
@@ -147,7 +147,7 @@ router.put('/change-wb-name', function (req, res, next) { //http://localhost:300
 });
 
 //Add new group to whiteboard
-router.put('/change-group-name', function (req, res, next) { //http://localhost:3000/
+router.put('/change-group-name', function (req, res, next) { 
     var result = wrapper.editGroupName(req.body, function(err, data){
         if(err) {
             res.json({
@@ -165,7 +165,7 @@ router.put('/change-group-name', function (req, res, next) { //http://localhost:
 
 
 //Delete sticky note
-router.delete('/delete-group/:groupid', function (req, res, next) { //http://localhost:3000/
+router.delete('/delete-group/:groupid', function (req, res, next) { 
     var result = wrapper.deleteGroup(req.params.groupid, function(err, data){
         if(err) {
             res.json({
@@ -182,7 +182,7 @@ router.delete('/delete-group/:groupid', function (req, res, next) { //http://loc
 });
 
 //Add sticky to a group
-router.put('/add-sticky-toGroup', function (req, res, next) { //http://localhost:3000/
+router.put('/add-sticky-toGroup', function (req, res, next) { 
     var result = wrapper.addStickyToGroup(req.body, function(err, data){
         if(err) {
             res.json({
@@ -199,7 +199,7 @@ router.put('/add-sticky-toGroup', function (req, res, next) { //http://localhost
 });
 
 //Change wb's state
-router.put('/change-wb-state', function (req, res, next) { //http://localhost:3000/
+router.put('/change-wb-state', function (req, res, next) { 
     var result = wrapper.changeStateWhiteboard(req.body, function(err, data){
         if(err) {
             res.json({
@@ -215,8 +215,8 @@ router.put('/change-wb-state', function (req, res, next) { //http://localhost:30
     });
 });
 
-//Change wb's state
-router.put('/set-wb-layout', function (req, res, next) { //http://localhost:3000/
+//Set an existing layout to whiteboard
+router.put('/set-wb-layout', function (req, res, next) { 
     var result = wrapper.setWhiteboardLayout(req.body, function(err, data){
         if(err) {
             res.json({
@@ -225,15 +225,15 @@ router.put('/set-wb-layout', function (req, res, next) { //http://localhost:3000
             });
         } else {
             res.json({
-                error: false, 
+                error: false,
                 message: data
             });
         }
     });
 });
 
-//Change wb's state
-router.post('/create-wb-layout', function (req, res, next) { //http://localhost:3000/
+//Create a new layout to a whiteboard
+router.post('/create-wb-layout', function (req, res, next) { 
     var result = wrapper.createLayoutWhiteboard(req.body, function(err, data){
         if(err) {
             res.json({
@@ -242,11 +242,120 @@ router.post('/create-wb-layout', function (req, res, next) { //http://localhost:
             });
         } else {
             res.json({
-                error: false, 
+                error: false,
                 message: data
             });
         }
     });
 });
+
+// Create a user
+// Not completed
+router.post('/create-user', function (req, res, next) {
+    var result = wrapper.createUser(req.body, function (err, data) {
+        if (err) {
+            res.json({
+                error: true,
+                message: err
+            });
+        } else {
+            res.json({
+                error: false,
+                message: data
+            });
+        }
+    });
+});
+
+// Invite user to whiteboard
+// Not compeleted
+router.post('/inv-user', function (req, res, next) {
+    var result = wrapper.inviteUserToWhiteboard(req.body, function (err, data) {
+        if (err) {
+            res.json({
+                error: true,
+                message: err
+            });
+        } else {
+            res.json({
+                error: false,
+                message: data
+            });
+        }
+    });
+});
+
+// Remove user from whiteboard
+// Not compeleted
+router.delete('/rem-user/:userid/:wbid', function (req, res, next) {
+    var result = wrapper.removeUserFromWhiteboard(req.params, function (err, data) {
+        if (err) {
+            res.json({
+                error: true,
+                message: err
+            });
+        } else {
+            res.json({
+                error: false,
+                message: data
+            });
+        }
+    });
+});
+
+// Check invitations
+router.get('/check-inv/:userid', function (req, res, next) {
+    var result = wrapper.checkInvitations(req.params, function (err, data) {
+        if (err) {
+            res.json({
+                error: true,
+                message: err
+            });
+        } else {
+            res.json({
+                error: false,
+                message: data
+            });
+        }
+    });
+});
+
+// Accept invitation
+router.post('/accept-inv/', function (req, res, next) {
+    var result = wrapper.acceptInvitation(req.body, function (err, data) {
+        if (err) {
+            res.json({
+                error: true,
+                message: err
+            });
+        } else {
+            res.json({
+                error: false,
+                message: data
+            });
+        }
+    });
+});
+
+// Decline invitation
+// Not compeleted
+router.delete('/decline-inv/:invid', function (req, res, next) {
+    var result = wrapper.declineInvitation(req.params, function (err, data) {
+        if (err) {
+            res.json({
+                error: true,
+                message: err
+            });
+        } else {
+            res.json({
+                error: false,
+                message: data
+            });
+        }
+    });
+});
+
+// Get users
+// Remove users
 
 module.exports = router;

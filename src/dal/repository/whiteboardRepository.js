@@ -190,7 +190,7 @@ WhiteboardRepository.prototype.setLayout = function(jsonContent, cb){
 
 /**
  * Method to create a new layout to a whiteboard
- * @param jsonContent - json string with whiteboard id and layout id
+ * @param jsonContent - json string with whiteboard id and layout content
  * @param cb - callback to method caller e.g. "function(err, data)"
  */
 WhiteboardRepository.prototype.createNewLayoutToWhiteboard = function(jsonContent, cb){
@@ -199,22 +199,6 @@ WhiteboardRepository.prototype.createNewLayoutToWhiteboard = function(jsonConten
         if (err){
             cb(err, null);
         } else {
-            //Ineer callback
-            /*
-            //input: 
-                    {
-                    "layoutname": "layoutName",
-                    "wbid": 2,
-                    "subtitles": [{
-                        "lineIndex": 1,
-                        "subtitle": "subtitle1"
-                    }, {
-                        "lineIndex": 2,
-                        "subtitle": "subtitle2"
-                    }]
-                    }
-            */
-           
             var layoutid = data;
             layoutid = JSON.stringify(layoutid);
             var strLayoutID = JSON.parse(layoutid);
@@ -223,8 +207,6 @@ WhiteboardRepository.prototype.createNewLayoutToWhiteboard = function(jsonConten
             var length = jsonContent.subtitles.length;
             var subtitles = jsonContent.subtitles;
             var values = '(';
-
-            //(null,5,1,"legenda lina 1")
 
             for (i = 0; i < length; i++) {
                 if(i === length - 1){
@@ -237,15 +219,7 @@ WhiteboardRepository.prototype.createNewLayoutToWhiteboard = function(jsonConten
             values = values + ')';
 
             
-            connector.addSubtitleToLayout(values, function(err, data){
-                /*
-                if (err){
-                    cb(err, null);
-                } else {
-                    cb(null, data);
-                }
-                */
-            });
+            connector.addSubtitleToLayout(values, function(err, data) { });
 
             cb(null, data);
 
@@ -253,6 +227,21 @@ WhiteboardRepository.prototype.createNewLayoutToWhiteboard = function(jsonConten
     });
 }
 
+/**
+ * Method to get users of a specific whiteboard
+ * @param jsonContent - json string with whiteboard id
+ * @param cb - callback to method caller e.g. "function(err, data)"
+ */
+WhiteboardRepository.prototype.getWhiteboardUsers = function(jsonContent, cb){
+    values = [jsonContent.wbid];
+    connector.performQuery('', values, function(err, data){
+        if (err){
+            cb(err, null);
+        } else {
+            cb(null, data);
+        }
+    });
+}
 
 /**
  * Exporting a new instantiation of this
