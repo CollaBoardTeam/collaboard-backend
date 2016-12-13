@@ -231,6 +231,7 @@ create procedure getWhiteboardContent(in idWhiteboard int)
 begin
 	select json_object(
 	'whiteboardID', wb.idWhiteBoard,
+    'whiteboardLayoutID', wb.idLayoutFK,
     'whiteboardName', wb.boardName,
     'whiteboardState', wb.locked,
     'whiteboardGroups', ( select
@@ -495,5 +496,18 @@ begin
     select max(last_insert_id()) into varLast;
     select * from user where idUser=varLast;
     end if;
+end$$
+DELIMITER ;
+
+# ******************************************************************
+#   Get layout by id
+# ******************************************************************
+
+DROP procedure IF EXISTS `getLayoutById`;
+DELIMITER $$
+USE `collaboard`$$
+create procedure getLayoutById(in inputId int)
+begin
+    select * from layout where idLayout = inputId;
 end$$
 DELIMITER ;

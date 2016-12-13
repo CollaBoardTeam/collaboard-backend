@@ -313,6 +313,21 @@ Wrapper.prototype.getLayouts = function(jsonContent, cb){
     });
 }
 
+/**
+ * Calls utility repository to get a layout given an id
+ * @param jsonContent - layout id
+ * @param cb - callback to the method caller e.g. "function (err, data)"
+ */
+Wrapper.prototype.getLayoutById = function(jsonContent, cb){
+    utilityRepo.getLayoutById(jsonContent, function(err, data){
+        if (err) {
+            cb(err, null);
+        } else {
+            cb(null, data);
+        }
+    });
+}
+
 //###############################################################//
 //###################        USER        ########################//
 //###############################################################//

@@ -391,4 +391,22 @@ router.delete('/remove-user-wb/:wbid/:userid', function (req, res, next) {
     });
 });
 
+// Get layout by id
+router.get('/get-layout/:layoutid', function (req, res, next) {
+    var result = wrapper.getLayoutById(req.params, function (err, data) {
+        if (err) {
+            res.json({
+                error: true,
+                message: err
+            });
+        } else {
+            res.json({
+                error: false,
+                message: data
+            });
+        }
+    });
+});
+
+
 module.exports = router;
