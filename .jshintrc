@@ -1,0 +1,8 @@
+{
+    // Shows unused vars
+    "unused": true,
+    // Forces to use curly braces even if it's a one line statement
+    "curly": true,
+    // Forces the usage of !==, === in favor of !=, ==
+    "eqeqeq": true
+}

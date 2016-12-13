@@ -1,0 +1,40 @@
+{
+  "name": "collaboard",
+  "version": "0.0.1",
+  "description": "Realtime collaborative whiteboard",
+  "main": "src/server.js",
+  "author": "FEUP-LES-TeamA",
+  "license": "ISC",
+  "scripts": {
+    "start": "node src/server.js",
+    "test": "export PORT=3001 & echo $PORT & mocha test/*.js",
+    "test-coverage": "istanbul cover node_modules/mocha/bin/_mocha test/*.js",
+    "lint": "jshint **/*.js",
+    "build": "npm run lint && npm run test && npm start",
+    "deploy": "echo Error: Not defined"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/CollaBoardTeam/collaboard-backend.git"
+  },
+  "bugs": {
+    "url": "https://github.com/CollaBoardTeam/collaboard-backend/issues"
+  },
+  "homepage": "https://github.com/CollaBoardTeam/collaboard-backend#readme",
+  "dependencies": {
+    "body-parser": "^1.15.2",
+    "express": "^4.14.0",
+    "mysql": "^2.11.1",
+    "socket.io": "^1.5.1",
+    "uuid": "^2.0.3"
+  },
+  "devDependencies": {
+    "chai": "^3.5.0",
+    "istanbul": "^0.4.5",
+    "jshint": "^2.9.4",
+    "mocha": "^3.1.2",
+    "morgan": "^1.7.0",
+    "request": "^2.76.0",
+    "socket.io-client": "^1.5.1"
+  }
+}
