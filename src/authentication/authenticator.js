@@ -27,7 +27,7 @@ module.exports = function (app) {
                                 expiresIn: 3600, algorithm: 'HS512'
                             });
                         // Return token to user
-                        res.json({ error: false, message: token });
+                        res.json({ error: false, message: data, token: token });
                     } else {
                         // Return error to user
                         res.json({ error: true, message: 'User does not exist' });
