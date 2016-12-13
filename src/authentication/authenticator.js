@@ -4,16 +4,37 @@ module.exports = function (app) {
      */
     var module = { };
     var jwt = require('jsonwebtoken');
+    var user = require('../app/routes/routesController/userController');
     
     /**
      * Authentication method 
-     * TO:DO CHANGE DATABASE QUERY
      */
     module.auth = function (req, res) {
         // Check if email and password are supplied
         if (req.body.email && req.body.password) {
             // Check if user exists in database
-            var db = require('../dal/connector/dbConnectorMySQL');
+            user.authenticateUser(req, res, function (err, data) {
+                if(err) {
+                    res.json({
+                        error: true,
+                        message: err
+                    });
+                } else {
+                    // User exists
+                    if (data !== undefined && data.length > 0) {
+                        // Authenticate user
+                        var token = jwt.sign({ user: data, date: new Date().getSeconds()}, app.get('superSecret'), {
+                                expiresIn: 3600, algorithm: 'HS512'
+                            });
+                        // Return token to user
+                        res.json({ error: false, message: token });
+                    } else {
+                        // Return error to user
+                        res.json({ error: true, message: 'User does not exist' });
+                    }
+                }
+            });
+            /*var db = require('../dal/connector/dbConnectorMySQL');
             db.performQuery('select * from user where email = ? and password = ?;', [req.body.email, req.body.password], function (err, data) {
                 if (err) {
                     res.json({ error: true, message: err });
@@ -32,7 +53,7 @@ module.exports = function (app) {
                         res.json({ error: true, message: 'User does not exist' });
                     }
                 }
-            }); 
+            }); */
         } else {
             // Determine what caused the error
             if (!req.body.email) var message = 'No email supplied';

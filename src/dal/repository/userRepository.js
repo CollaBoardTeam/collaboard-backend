@@ -31,8 +31,8 @@ UserRepository.prototype.create = function (jsonContent, cb) {
  * @param cb - callback to method caller e.g "function(err, data)"
  */
 UserRepository.prototype.authenticate = function (jsonContent, cb) {
-    var values = [];
-    connector.performQuery('', values, function (err, data) {
+    var values = [jsonContent.email, jsonContent.password];
+    connector.performQuery('CALL authenticateUser(?,?)', values, function (err, data) {
         if (err) {
             cb(err, null);
         } else {

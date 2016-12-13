@@ -33,9 +33,9 @@ app.set('superSecret', jwtConfig.secret);
 app.use(bodyParser.json()); // support json encoded bodies
 app.use(bodyParser.urlencoded({ extended: true })); // support encoded bodies
 // Declare routes
-var index = require('./app/routes/index');
-var public = require('./app/routes/public');
-var private = require('./app/routes/private');
+//var index = require('./app/routes/index');
+//var public = require('./app/routes/public');
+//var private = require('./app/routes/private');
 
 // Declare routes endpoints
 //app.use('/', index); // http://localhost:3000/

@@ -511,3 +511,15 @@ begin
     select * from layout where idLayout = inputId;
 end$$
 DELIMITER ;
+
+# ******************************************************************
+#   Authenticate User
+# ******************************************************************
+DROP procedure IF EXISTS `authenticateUser`;
+DELIMITER $$
+USE `collaboard`$$
+create procedure authenticateUser(in inputEmail text, in inputPassword text)
+begin
+    select idUser, fullName from user where email = inputEmail and password = inputPassword;
+end$$
+DELIMITER ;
