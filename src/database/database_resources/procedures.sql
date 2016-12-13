@@ -339,11 +339,15 @@ USE `collaboard`$$
 create procedure addLineToSticky(in inputIdSticky int,in inputContent varchar(255),in inputLineIndex int)
 begin
     declare varLayout,varLine INT;
-	select distinct idLayoutFK into varLayout from stickyNote  join stickyNoteLine on
-	stickynote.idSticky=stickynoteline.idStickyNoteFK join
-	line on stickynoteline.idLineFK=line.idLine where idSticky=inputIdSticky;
-	select idLine into varLine from line where idLayoutFK=varLayout and indexline=inputLineIndex;
-	insert into stickyNoteLine values(varLine,inputIdSticky,inputContent);
+            
+	select w.idLayoutFK into varLayout from stickyNote sn
+		join groupo g on g.idGroup = sn.idGroupFK
+		join whiteboard w on w.idWhiteboard = g.idWhiteBoardFK
+	where sn.idSticky = inputIdSticky;
+	
+    select idLine into varLine from line where idLayoutFK = varLayout and indexline = inputLineIndex;
+    
+	insert into stickyNoteLine values(varLine, inputIdSticky, inputContent);
 end$$
 DELIMITER ;
 

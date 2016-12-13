@@ -3,6 +3,7 @@
  */
 var path = require('path');
 var connector = require(path.resolve('src/dal/connector/dbConnectorMySQL'));
+var parallel = require('parallel-io');
 
 /**
  * Repository to manage all sticky notes operations
@@ -21,7 +22,28 @@ StickyNoteRepository.prototype.create = function(jsonContent, cb){
         var values = [jsonContent.userid, stickieslines[0].lineContent, jsonContent.stickypositon, jsonContent.wbGroupID, jsonContent.colorID];
         var stickyid;
 
-        connector.performQuery('CALL createStickyNote(?,?,?,?,?)',values, function(err, data){
+        var group = parallel();
+
+        connector.performQuery('CALL createStickyNote(?,?,?,?,?)',values, group.wrap('op', function(err, data){
+            return data;
+        }));
+
+        group.onAllDone(function (results) {
+            var group2 = parallel();
+            for (var i = 0; i < length; i++) {
+                var values2 = [results['op'][0].idSticky, stickieslines[i].lineContent, stickieslines[i].linePosition];
+                connector.performQuery('CALL addLineToSticky(?,?,?)',values2, group2.wrap('op' + i, function(err, data){
+                    return data;
+                }));
+            }   
+
+            group2.onAllDone(function (results) {
+                cb(null, 'Created');
+            });
+            group2 = null;
+        });
+        group = null;
+        /*connector.performQuery('CALL createStickyNote(?,?,?,?,?)',values, function(err, data){
         if (err){
             cb(err, null);
         } else {
@@ -48,7 +70,7 @@ StickyNoteRepository.prototype.create = function(jsonContent, cb){
             }
             cb(null,data);
         }
-    });
+    });*/
 }
 
 /**
