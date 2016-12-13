@@ -47,8 +47,8 @@ io.on('connection', function (client) {
         if (!whiteboard){
             io.to(user).emit('error', 'room null');
             return;
-        } 
-        client.broadcast.to(whiteboard).emit('chat message', msg);
+        }
+        client.broadcast.to(whiteboard).emit('specific', msg);
     });
 
     // Echoes message to everyone

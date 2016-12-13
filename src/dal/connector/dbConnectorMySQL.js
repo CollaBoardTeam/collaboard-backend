@@ -68,6 +68,39 @@ DBConnectorMYSQL.prototype.closeConnection = function(){
     this.connection.end();
 }
 
+
+/**
+ * New function to edit sticky. 
+ */
+DBConnectorMYSQL.prototype.editSticky = function(values, cb){
+    var query = ' INSERT INTO stickynoteline values' + values + 'ON DUPLICATE KEY UPDATE lineContent=VALUES(lineContent);';
+
+    console.log(query);
+    this.pool.query(query, function(err, rows) {
+        if (err) {
+            cb(err, null);
+        } else
+            cb(null, rows[0]);
+    });
+}
+
+
+/**
+ * New function to edit sticky. 
+ */
+DBConnectorMYSQL.prototype.addSubtitleToLayout = function(values, cb){
+    //INSERT INTO line values(null,5,1,"legenda lina 1"), (null,5,2,"legenda linha2"), (null,5,3,"legenda linha 3"),(null,5,4,"legenda linha4")ON DUPLICATE KEY UPDATE lineLegend=VALUES(lineLegend);
+    var query = ' INSERT INTO line values' + values + ' ON DUPLICATE KEY UPDATE lineLegend=VALUES(lineLegend);';
+
+    this.pool.query(query, function(err, rows) {
+        if (err) {
+            cb(err, null);
+        } else
+            cb(null, rows[0]);
+    });
+}
+
+
 /**
  * Exporting a new instantiation of this
  */
