@@ -31,8 +31,9 @@ WhiteboardRepository.prototype.create = function(jsonContent, cb){
  * @param jsonContent - json string with user id
  * @param cb - callback to method caller e.g. "function(err, data)"
  */
-WhiteboardRepository.prototype.getWhiteboardByUser = function(userID, cb){
-    connector.performQuery('CALL whiteBoardByUser(?)', userID, function(err, data){
+WhiteboardRepository.prototype.getWhiteboardByUser = function(jsonContent, cb){
+    var values = [jsonContent.userID];
+    connector.performQuery('CALL whiteBoardByUser(?)', values, function(err, data){
         if (err){
             cb(err, null);
         } else {
@@ -46,8 +47,9 @@ WhiteboardRepository.prototype.getWhiteboardByUser = function(userID, cb){
  * @param jsonContent - json string with whiteboard id
  * @param cb - callback to method caller e.g. "function(err, data)"
  */
-WhiteboardRepository.prototype.getWhiteboardContent = function(wbID, cb){
-    connector.performQuery('CALL getWhiteboardContent(?)', wbID, function(err, data){
+WhiteboardRepository.prototype.getWhiteboardContent = function(jsonContent, cb){
+    var values = [jsonContent.wbID];
+    connector.performQuery('CALL getWhiteboardContent(?)', values, function(err, data){
         if (err){
             cb(err, null);
         } else {
@@ -62,7 +64,7 @@ WhiteboardRepository.prototype.getWhiteboardContent = function(wbID, cb){
  * @param cb - callback to method caller e.g. "function(err, data)"
  */
 WhiteboardRepository.prototype.delete = function(jsonContent, cb){
-    values = [jsonContent.params.wbid,jsonContent.params.userid];
+    values = [jsonContent.wbid,jsonContent.userid];
     var jsonContentInt = values.map(Number);
     connector.performQuery('CALL deleteWhiteboard(?,?)', jsonContentInt, function(err, data){
         if (err){
@@ -128,7 +130,8 @@ WhiteboardRepository.prototype.editGroupName = function(jsonContent, cb){
  * @param cb - callback to method caller e.g. "function(err, data)"
  */
 WhiteboardRepository.prototype.deleteGroup = function(jsonContent, cb){
-    connector.performQuery('CALL deletegroup(?)', jsonContent, function(err, data){
+    var values = [jsonContent.groupid];
+    connector.performQuery('CALL deletegroup(?)', values, function(err, data){
         if (err){
             cb(err, null);
         } else {
@@ -162,7 +165,6 @@ WhiteboardRepository.prototype.addStickyToGroup = function(jsonContent, cb){
  */
 WhiteboardRepository.prototype.changeStateWhiteboard = function(jsonContent, cb){
     values = [jsonContent.wbid];
-    console.log(values);
     connector.performQuery('CALL changeStateWB(?)', values, function(err, data){
         if (err){
             cb(err, null);
@@ -234,7 +236,6 @@ WhiteboardRepository.prototype.createNewLayoutToWhiteboard = function(jsonConten
  */
 WhiteboardRepository.prototype.getWhiteboardUsers = function(jsonContent, cb){
     var wbid = parseInt(jsonContent.wbid);
-    console.log(wbid);
     connector.performQuery('call getUsersWB(?);', wbid, function(err, data){
         if (err){
             cb(err, null);

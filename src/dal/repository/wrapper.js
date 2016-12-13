@@ -288,8 +288,8 @@ Wrapper.prototype.getWhiteboardUsers = function(jsonContent, cb){
  * @param jsonContent - empty json object
  * @param cb - callback to the method caller e.g. "function (err, data)"
  */
-Wrapper.prototype.getColors = function(jsonContent, cb){
-    utilityRepo.getColors(jsonContent, function(err, data){
+Wrapper.prototype.getColors = function (cb){
+    utilityRepo.getColors(function (err, data){
         if (err) {
             cb(err, null);
         } else {
@@ -303,8 +303,8 @@ Wrapper.prototype.getColors = function(jsonContent, cb){
  * @param jsonContent - empty json object
  * @param cb - callback to the method caller e.g. "function (err, data)"
  */
-Wrapper.prototype.getLayouts = function(jsonContent, cb){
-    utilityRepo.getLayouts(jsonContent, function(err, data){
+Wrapper.prototype.getLayouts = function (cb){
+    utilityRepo.getLayouts(function (err, data){
         if (err) {
             cb(err, null);
         } else {
