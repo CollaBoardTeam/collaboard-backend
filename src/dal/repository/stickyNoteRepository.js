@@ -110,7 +110,8 @@ StickyNoteRepository.prototype.edit = function(jsonContent, cb){
  * @param cb - callback to method caller e.g. "function(err, data)"
  */
 StickyNoteRepository.prototype.delete = function(jsonContent, cb){
-    connector.performQuery('CALL deleteStickyNote(?)', jsonContent, function(err, data){
+    var values = [jsonContent.stickyID];
+    connector.performQuery('CALL deleteStickyNote(?)', values, function(err, data){
         if (err){
             cb(err, null);
         } else {
