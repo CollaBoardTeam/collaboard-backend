@@ -512,7 +512,9 @@ DELIMITER $$
 USE `collaboard`$$
 create procedure getLayoutById(in inputId int)
 begin
-    select * from layout where idLayout = inputId;
+    select idLayout, layoutName, idLine, indexLine, lineLegend from layout lay
+	join line l on l.idLayoutFK = lay.idLayout
+	where lay.idLayout = inputId;
 end$$
 DELIMITER ;
 
