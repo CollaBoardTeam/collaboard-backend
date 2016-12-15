@@ -234,6 +234,7 @@ begin
     'whiteboardLayoutID', wb.idLayoutFK,
     'whiteboardName', wb.boardName,
     'whiteboardState', wb.locked,
+    'whiteboardOwner', uwb.idUserFK,
     'whiteboardGroups', ( select
 							cast(
 								concat('[',
@@ -273,7 +274,9 @@ begin
 						from groupo as gp
                         where gp.idWhiteBoardFK = wb.idWhiteBoard )
 					) as result
-			from whiteBoard as wb where wb.idWhiteBoard = idWhiteboard;
+			from whiteBoard as wb
+            join userWhiteBoard uwb on uwb.idWhiteBoardFK = wb.idWhiteBoard
+            where wb.idWhiteBoard = idWhiteboard and uwb.idRollFK = 2;
 end$$
 DELIMITER ;
 
