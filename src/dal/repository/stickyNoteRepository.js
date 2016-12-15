@@ -30,7 +30,7 @@ StickyNoteRepository.prototype.create = function(jsonContent, cb){
 
         group.onAllDone(function (results) {
             var group2 = parallel();
-            for (var i = 0; i < length; i++) {
+            for (var i = 1; i < length; i++) {
                 var values2 = [results['op'][0].idSticky, stickieslines[i].lineContent, stickieslines[i].linePosition];
                 connector.performQuery('CALL addLineToSticky(?,?,?)',values2, group2.wrap('op' + i, function(err, data){
                     return data;
