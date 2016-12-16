@@ -2,18 +2,12 @@ module.exports = function (app) {
     var module = { };
 
     var authenticator = require('../../authentication/authenticator')(app);
-    //var public = require('./routesController/publicController');
-    //var private = require('./routesController/privateController');
     var whiteboard = require('./routesController/whiteboardController');
     var stickynote = require('./routesController/stickyNoteController');
     var layout = require('./routesController/layoutController');
     var group = require('./routesController/groupController');
     var utility = require('./routesController/utilityController');
     var user = require('./routesController/userController');
-
-    module.test = function (req, res) {
-        res.json({ message: 'Success!' });
-    }
 
     // Holds relevant endpoints to authorize
     module.routes = [

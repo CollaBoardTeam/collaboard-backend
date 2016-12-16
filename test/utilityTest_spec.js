@@ -32,7 +32,7 @@ describe('Routing testing suite', function () {
         });
     }
 
-   describe('Get @ /utility/', function (){
+   describe('Test @ /utility/', function (){
        it('returns status code 200', function (done) {
            auth(function (cb) {
             request.get({
@@ -79,6 +79,48 @@ describe('Routing testing suite', function () {
                 response.statusCode.should.equal(403);
                 body.should.equal(out);
                 done();
+           });
+       });
+
+       it('return invalid signature', function (done) {
+           var out = '{"error":true,"message":{"name":"JsonWebTokenError","message":"invalid signature"}}';
+           auth(function (cb) {
+               request.get({
+                   headers: { 'x-access-token': cb + 'i' },
+                   url: baseUrl + 'utility/get-colors'
+               }, function (error, response, body) {
+                   response.statusCode.should.equal(200);
+                   body.should.equal(out);
+                   done();
+               });
+           });
+       });
+
+       it('return jwt malformed', function (done) {
+           var out = '{"error":true,"message":{"name":"JsonWebTokenError","message":"jwt malformed"}}';
+           auth(function (cb) {
+               request.get({
+                   headers: { 'x-access-token': 'asdlkjaklçkjljkçlkjaSDÇLKJSAlçkdj' },
+                   url: baseUrl + 'utility/get-colors'
+               }, function (error, response, body) {
+                   response.statusCode.should.equal(200);
+                   body.should.equal(out);
+                   done();
+               });
+           });
+       });
+
+       it('return invalid token', function (done) {
+           var out = '{"error":true,"message":{"name":"JsonWebTokenError","message":"invalid token"}}';
+           auth(function (cb) {
+               request.get({
+                   headers: { 'x-access-token': 'eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJ1c2pZFVzZXIiOjEsImZ1bGxOYW1lIjoidXNldGVzdCJ9XSwiZGF0ZSI6MzYsImlhdCI6MTQ4MTg4OTE1NiwiZXhwIjoxNDgxODkyNzU2fQ.ZiZ-O76s9suMv-dLuh8FlOopvOiRGCC8k3L3lDHdd50vZrDDeDqOcTkCboV0o7bX5JVm8MRepcOa7SvNW5AqsQ' },
+                   url: baseUrl + 'utility/get-colors'
+               }, function (error, response, body) {
+                   response.statusCode.should.equal(200);
+                   body.should.equal(out);
+                   done();
+               });
            });
        });
    });
