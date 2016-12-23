@@ -33,6 +33,7 @@ describe('Routing testing suite', function () {
     }
 
    describe('Test @ /layout/', function (){
+       //Get layouts and get layouts by ID
        it('returns status code 200', function (done) {
            auth(function (cb) {
             request.get({
@@ -45,7 +46,7 @@ describe('Routing testing suite', function () {
            });
        });
        
-       it('returns colors', function (done) {
+       it('returns layouts', function (done) {
            var out = '{"error":false,"message":[{"linhas":3,"idLayout":1,"layoutName":"noLayout"}]}'
            auth(function (cb) {
             request.get({
@@ -53,7 +54,7 @@ describe('Routing testing suite', function () {
                 url: baseUrl + 'layout/get-layouts'
             }, function (error, response, body) {
                     response.statusCode.should.equal(200);
-                    body.should.equal(out);
+                     body.should.be.json; 
                     done();
                });
            });
@@ -78,6 +79,7 @@ describe('Routing testing suite', function () {
            }, function (error, response, body) {
                 response.statusCode.should.equal(403);
                 body.should.equal(out);
+    
                 done();
            });
        });
@@ -123,5 +125,64 @@ describe('Routing testing suite', function () {
                });
            });
        });
+
+
+       //Create layout
+       it('returns status code 200', function (done) {
+           auth(function (cb) {
+            request.post({
+               headers: { 'x-access-token': cb, 'Content-Type': 'application/json' },
+                body: '{"layoutname": "layoutName","wbid": 2,"subtitles": [{"lineIndex": 1,"subtitle": "sa das asd ads"}, {"lineIndex": 2,"subtitle": "ads ads"}, {"lineIndex": 3,"subtitle": "subtitlsad asd asdsade2"}, {"lineIndex": 4,"subtitle": "subtitasddsadsadasdsa dsaads le2"}]}',
+                url: baseUrl + 'layout/create-wb-layout'
+            }, function (error, response, body) {
+                    response.statusCode.should.equal(200);
+                    done();
+               });
+           });
+       });
+       
+       it('creating layout', function (done) {
+           auth(function (cb) {
+            request.post({
+                headers: { 'x-access-token': cb, 'Content-Type': 'application/json' },
+                body: '{"layoutname": "layoutName","wbid": 2,"subtitles": [{"lineIndex": 1,"subtitle": "sa das asd ads"}, {"lineIndex": 2,"subtitle": "ads ads"}, {"lineIndex": 3,"subtitle": "subtitlsad asd asdsade2"}, {"lineIndex": 4,"subtitle": "subtitasddsadsadasdsa dsaads le2"}]}',
+                url: baseUrl + 'layout/create-wb-layout'
+            }, function (error, response, body) {
+                    response.statusCode.should.equal(200);
+                    body.should.be.json; 
+                    done();
+               });
+           });
+       });
+       
+       /*
+       //set layout to wb
+       it('returns status code 200', function (done) {
+           auth(function (cb) {
+            request.post({
+               headers: { 'x-access-token': cb, 'Content-Type': 'application/json' },
+                body: '{"layoutname": "layoutName","wbid": 2,"subtitles": [{"lineIndex": 1,"subtitle": "sa das asd ads"}, {"lineIndex": 2,"subtitle": "ads ads"}, {"lineIndex": 3,"subtitle": "subtitlsad asd asdsade2"}, {"lineIndex": 4,"subtitle": "subtitasddsadsadasdsa dsaads le2"}]}',
+                url: baseUrl + 'layout/set-wb-layout'
+            }, function (error, response, body) {
+                    response.statusCode.should.equal(200);
+                    done();
+               });
+           });
+       });
+       
+       it('set layout', function (done) {
+           auth(function (cb) {
+            request.put({
+                headers: { 'x-access-token': cb, 'Content-Type': 'application/x-www-form-urlencoded' },
+                body: { 'layoutid': 1, 'wbid': 1 },
+                url: baseUrl + 'whiteboard/set-wb-layout'
+            }, function (error, response, body) {
+                    response.statusCode.should.equal(200);
+                    body.should.be.json; 
+                    done();
+               });
+           });
+       });
+*/
    });
 });
