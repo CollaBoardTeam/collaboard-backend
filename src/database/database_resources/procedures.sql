@@ -231,7 +231,10 @@ create procedure getWhiteboardContent(in idWhiteboard int)
 begin
 	select json_object(
 	'whiteboardID', wb.idWhiteBoard,
+    'whiteboardLayoutID', wb.idLayoutFK,
     'whiteboardName', wb.boardName,
+    'whiteboardState', wb.locked,
+    'whiteboardOwner', uwb.idUserFK,
     'whiteboardGroups', ( select
 							cast(
 								concat('[',
@@ -271,7 +274,9 @@ begin
 						from groupo as gp
                         where gp.idWhiteBoardFK = wb.idWhiteBoard )
 					) as result
-			from whiteBoard as wb where wb.idWhiteBoard = idWhiteboard;
+			from whiteBoard as wb
+            join userWhiteBoard uwb on uwb.idWhiteBoardFK = wb.idWhiteBoard
+            where wb.idWhiteBoard = idWhiteboard and uwb.idRollFK = 2;
 end$$
 DELIMITER ;
 
@@ -337,10 +342,193 @@ USE `collaboard`$$
 create procedure addLineToSticky(in inputIdSticky int,in inputContent varchar(255),in inputLineIndex int)
 begin
     declare varLayout,varLine INT;
-	select distinct idLayoutFK into varLayout from stickyNote  join stickyNoteLine on
-	stickynote.idSticky=stickynoteline.idStickyNoteFK join
-	line on stickynoteline.idLineFK=line.idLine where idSticky=inputIdSticky;
-	select idLine into varLine from line where idLayoutFK=varLayout and indexline=inputLineIndex;
-	insert into stickyNoteLine values(varLine,inputIdSticky,inputContent);
+            
+	select w.idLayoutFK into varLayout from stickyNote sn
+		join groupo g on g.idGroup = sn.idGroupFK
+		join whiteboard w on w.idWhiteboard = g.idWhiteBoardFK
+	where sn.idSticky = inputIdSticky;
+	
+    select idLine into varLine from line where idLayoutFK = varLayout and indexline = inputLineIndex;
+    
+	insert into stickyNoteLine values(varLine, inputIdSticky, inputContent);
+end$$
+DELIMITER ;
+
+-- *****************************************************************
+--   getLayouts    get all the IdLayouts and number of lines
+-- *****************************************************************
+DROP procedure IF EXISTS `getLayouts`;
+DELIMITER $$
+USE `collaboard`$$
+create procedure getLayouts()
+begin
+    select count(idLayout) as linhas,layout.idLayout,layout.layoutName     from layout join line on layout.idLayout=line.idLayoutFK group by layout.idLayout;
+end$$
+DELIMITER ;
+
+-- *****************************************************************
+--   setLayoutWB   set the layout for the whiteboard
+-- *****************************************************************
+DROP procedure IF EXISTS `setLayoutWB`;
+DELIMITER $$
+USE `collaboard`$$
+create procedure setLayoutWB(in inputIdLayout INT, in inputIdWB int)
+begin
+ UPDATE whiteboard SET whiteBoard.idLayoutFK=inputIdLayout where whiteBoard.idWhiteBoard=inputIdWB;
+end$$
+DELIMITER ;
+
+-- *****************************************************************
+--   createLayoutWB  
+-- *****************************************************************
+DROP procedure IF EXISTS `createLayoutWB`;
+DELIMITER $$
+USE `collaboard`$$
+create procedure createLayoutWB(in inputIdWB INT,in inputlayoutName varchar(100))
+begin
+DECLARE varLayout INT;
+ insert into layout values(null,inputlayoutName);
+ select last_insert_id() into varLayout;
+ UPDATE whiteboard SET whiteBoard.idLayoutFK=varLayout where whiteBoard.idWhiteBoard=inputIdWB;
+ select idLayout from layout where layout.idLayout=varLayout;
+end$$
+DELIMITER ;
+
+-- *****************************************************************
+--   invite user  
+-- *****************************************************************
+DROP procedure IF EXISTS `inviteUsers`;
+DELIMITER $$
+USE `collaboard`$$
+create procedure inviteUsers(in inputIdOwner INT,in inputEmail varchar(100),in inputIdWhiteBoard INT)
+begin
+    DECLARE varUser,varOwner,varLast,varExistInvitation INT;
+    select idUser into varUser from user where email=inputEmail;
+    select idUserFK into varOwner from whiteboard join userwhiteboard 
+    on whiteboard.idWhiteBoard=userwhiteboard.idWhiteBoardFK join role 
+    on userwhiteboard.idRollFK=role.idRole 
+    where role.description='owner' and whiteBoard.idWhiteBoard=inputIdWhiteBoard;
+    select count(idinvite) into varExistInvitation  from invites where idWhiteBoard=inputIdWhiteBoard and idUserInvited=varUser;
+    if(varExistInvitation =0) then
+		if (varOwner=inputIdOwner and varUser is not null) then
+		insert into invites values(null,inputIdWhiteBoard,varOwner,varUser,null);
+		end if;
+	end if;
+end$$
+DELIMITER ;
+
+-- *****************************************************************
+--   check invitation  
+-- *****************************************************************
+DROP procedure IF EXISTS `checkInvitation`;
+DELIMITER $$
+USE `collaboard`$$
+create procedure checkInvitation(in inputIdUser INT)
+begin
+    select idinvite,invites.idWhiteBoard,idOwnerWB,idUserInvited,sendDate,boardName from invites join whiteBoard on
+    invites.idWhiteBoard=whiteboard.idWhiteBoard where idUserInvited=inputIdUser;
+end$$
+DELIMITER ;
+
+-- *****************************************************************
+--   accept invitation
+-- *****************************************************************
+DROP procedure IF EXISTS `acceptInvitation`;
+DELIMITER $$
+USE `collaboard`$$
+create procedure acceptInvitation(in inputIdInvit INT,in inputIdWhiteBoard INT,in inputIdUser INT)
+begin
+declare varCount INT;
+select count(idUserFK) into varCount  from userwhiteboard where userwhiteboard.idUserFK=inputIdUser 
+and userwhiteboard.idWhiteBoardFK=inputIdWhiteBoard ;
+    DELETE FROM invites where idinvite=inputIdInvit;
+    if(varCount=0)then
+    INSERT INTO userWhiteBoard values(inputIdWhiteBoard,inputIdUser,1);
+    end if;
+end$$
+DELIMITER ;
+
+-- *****************************************************************
+--   delete invitation
+-- *****************************************************************
+DROP procedure IF EXISTS `deleteInvitation`;
+DELIMITER $$
+USE `collaboard`$$
+create procedure deleteInvitation(in inputIdInvit INT)
+begin
+    DELETE FROM invites where idinvite=inputIdInvit;
+end$$
+DELIMITER ;
+
+-- *****************************************************************
+--   removeUser from WhiteBoard
+-- *****************************************************************
+DROP procedure IF EXISTS `removeUserWB`;
+DELIMITER $$
+USE `collaboard`$$
+create procedure removeUserWB(in inputIdWB INT,in inputIdUser INT)
+begin
+    DELETE FROM userWhiteBoard where idWhiteBoardFK=inputIdWB and idUserFK=inputIdUser;
+end$$
+DELIMITER ;
+
+-- *****************************************************************
+--   get all user from a white board
+-- *****************************************************************
+DROP procedure IF EXISTS `getUsersWB`;
+DELIMITER $$
+USE `collaboard`$$
+create procedure getUsersWB(in inputIdWB INT)
+begin
+    select idWhiteBoard,boardName,idUser,email,idRollFK from whiteboard 
+    join userwhiteboard on whiteboard.idWhiteBoard=userwhiteboard.idWhiteBoardFK 
+    join user on userwhiteboard.idUserFK=user.IdUser
+    where idWhiteBoardFK=inputIdWB;
+end$$
+DELIMITER ;
+
+-- *****************************************************************
+--   register a new user
+-- *****************************************************************
+DROP procedure IF EXISTS `registerUser`;
+DELIMITER $$
+USE `collaboard`$$
+create procedure registerUser(in inputFullName varchar(255),in inputEmail varchar(100),in inputPassword varchar(25))
+begin
+    DECLARE varEmail,varLast INT;
+    set varLast=null;
+    select idUser into varEmail from user where email=inputEmail;
+    if(varEmail is null) then
+    insert into user values(null,inputFullName,inputEmail,inputPassword);
+    select max(last_insert_id()) into varLast;
+    select * from user where idUser=varLast;
+    end if;
+end$$
+DELIMITER ;
+
+# ******************************************************************
+#   Get layout by id
+# ******************************************************************
+
+DROP procedure IF EXISTS `getLayoutById`;
+DELIMITER $$
+USE `collaboard`$$
+create procedure getLayoutById(in inputId int)
+begin
+    select idLayout, layoutName, idLine, indexLine, lineLegend from layout lay
+	join line l on l.idLayoutFK = lay.idLayout
+	where lay.idLayout = inputId;
+end$$
+DELIMITER ;
+
+# ******************************************************************
+#   Authenticate User
+# ******************************************************************
+DROP procedure IF EXISTS `authenticateUser`;
+DELIMITER $$
+USE `collaboard`$$
+create procedure authenticateUser(in inputEmail text, in inputPassword text)
+begin
+    select idUser, fullName from user where email = inputEmail and password = inputPassword;
 end$$
 DELIMITER ;
